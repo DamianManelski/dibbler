@@ -961,26 +961,61 @@ bool TSrvCfgMgr::reconfigureSupport()
  */
 void TSrvCfgMgr::setCounters()
 {
+<<<<<<< HEAD
     int cnt = 0;
+=======
+    int iaCnt = 0, pdCnt = 0;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SrvAddrMgr().firstClient();
     SPtr<TAddrClient> client;
     SPtr<TSrvCfgIface> iface;
     while (client = SrvAddrMgr().getClient()) {
 	
+<<<<<<< HEAD
+=======
+        // addresses
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	SPtr<TAddrIA> ia;
 	client->firstIA();
 	while ( ia=client->getIA() ) {
 	    iface = getIfaceByID(ia->getIface());
+<<<<<<< HEAD
+=======
+            if (!iface)
+                continue;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    
 	    SPtr<TAddrAddr> addr;
 	    ia->firstAddr();
 	    while ( addr=ia->getAddr() ) {
 		iface->addClntAddr(addr->get(), true/*quiet*/);
+<<<<<<< HEAD
 		cnt++;
 	    }
 	}
     }
     Log(Debug) << "Increased pools usage: currently " << cnt << " address(es) are leased." << LogEnd;
+=======
+		iaCnt++;
+	    }
+	}
+
+        // prefixes
+        client->firstPD();
+        while (ia = client->getPD() ) {
+            iface = getIfaceByID(ia->getIface());
+            if (!iface)
+                continue;
+            SPtr<TAddrPrefix> prefix;
+            ia->firstPrefix();
+            while ( prefix=ia->getPrefix() ) {
+                iface->addClntPrefix(prefix->get(), true);
+                pdCnt++;
+            }
+        }
+    }
+    Log(Debug) << "Increased pools usage: currently " << iaCnt << " address(es) and " << pdCnt << " prefix(es) are leased." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 
@@ -1020,13 +1055,52 @@ void TSrvCfgMgr::bulkLQTimeout(unsigned int timeout)
     BulkLQTimeout = timeout;
 }
 
+<<<<<<< HEAD
 
 void TSrvCfgMgr::fqdnDdnsAddress(SPtr<TIPv6Addr> ddnsAddress)
+=======
+/// Sets DNS server address suitable for DNS Update
+///
+/// @param ddnsAddress DNS server address
+void TSrvCfgMgr::setDDNSAddress(SPtr<TIPv6Addr> ddnsAddress)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 {
     FqdnDdnsAddress = ddnsAddress;
 }
 
+<<<<<<< HEAD
 SPtr<TIPv6Addr> TSrvCfgMgr::fqdnDdnsAddress()
 {
     return FqdnDdnsAddress;
+=======
+/// Returns DNS server address suitable for DNS Update
+///
+/// @param iface interface index
+///
+/// @return DNS address (or NULL)
+SPtr<TIPv6Addr> TSrvCfgMgr::getDDNSAddress(int iface)
+{
+    if (FqdnDdnsAddress)
+        return FqdnDdnsAddress;
+
+    SPtr<TSrvCfgIface> ptrIface = this->getIfaceByID(iface);
+    if (!ptrIface) {
+        Log(Warning) << "No global DNS Update address specified and can't find dns-addres on "
+                     << "interface " << iface << LogEnd;
+        return 0;
+    }
+
+    SPtr<TIPv6Addr> DNSAddr;
+
+    List(TIPv6Addr) DNSSrvLst = *ptrIface->getDNSServerLst();
+    DNSSrvLst.first();
+    if (DNSSrvLst.count())
+        DNSAddr = DNSSrvLst.get();
+
+    if (!DNSAddr) {
+        Log(Error) << "DDNS: DNS Update aborted. DNS server address is not specified." << LogEnd;
+        return 0;
+    }
+    return DNSAddr;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }

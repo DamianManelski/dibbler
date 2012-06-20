@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*                                                                           
  * Dibbler - a portable DHCPv6                                               
  *                                                                           
@@ -7,11 +8,26 @@
  *                                                                           
  * released under GNU GPL v2 only licence                                
  *                                                                           
+=======
+/*
+ * Dibbler - a portable DHCPv6
+ *
+ * authors: Tomasz Mrugalski <thomson@klub.com.pl>
+ *          Marek Senderski <msend@o2.pl>
+ * changes: Grzegorz Pluto <g.pluto(at)u-r-b-a-n(dot)pl>
+ *
+ * released under GNU GPL v2 only licence
+ *
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 #ifndef SRVADDRMGR_H
 #define SRVADDRMGR_H
 
+<<<<<<< HEAD
+=======
+#include <vector>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "AddrMgr.h"
 #include "SrvCfgAddrClass.h"
 #include "SrvCfgPD.h"
@@ -27,14 +43,29 @@ class TSrvAddrMgr : public TAddrMgr
     class TSrvCacheEntry
     {
     public:
+<<<<<<< HEAD
       SPtr<TIPv6Addr> Addr;       // cached address, previously assigned to a client
       SPtr<TDUID>     Duid;       // client's duid    
+=======
+        TAddrIA::TIAType type; // address or prefix
+        SPtr<TIPv6Addr> Addr;  // cached address, previously assigned to a client
+        SPtr<TDUID>     Duid;  // client's duid
+    };
+
+    struct TExpiredInfo
+    {
+        SPtr<TAddrClient> client;
+        SPtr<TAddrIA> ia;
+        SPtr<TIPv6Addr> addr; // address or prefix
+	int prefixLen; // just for prefixes
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     };
 
     ~TSrvAddrMgr();
 
     // IA address management
     bool addClntAddr(SPtr<TDUID> clntDuid, SPtr<TIPv6Addr> clntAddr,
+<<<<<<< HEAD
 		     int iface, unsigned long IAID, unsigned long T1, unsigned long T2, 
 		     SPtr<TIPv6Addr> addr, unsigned long pref, unsigned long valid,
 		     bool quiet);
@@ -46,25 +77,59 @@ class TSrvAddrMgr : public TAddrMgr
 		   int iface, unsigned long iaid, SPtr<TIPv6Addr> addr, 
 		   unsigned long pref, unsigned long valid);
     bool delTAAddr(SPtr<TDUID> duid,unsigned long iaid, SPtr<TIPv6Addr> addr);
+=======
+                     int iface, unsigned long IAID, unsigned long T1, unsigned long T2,
+                     SPtr<TIPv6Addr> addr, unsigned long pref, unsigned long valid,
+                     bool quiet);
+    bool delClntAddr(SPtr<TDUID> duid,unsigned long IAID, SPtr<TIPv6Addr> addr,
+                     bool quiet);
+
+    // TA address management
+    bool addTAAddr(SPtr<TDUID> clntDuid, SPtr<TIPv6Addr> clntAddr,
+                   int iface, unsigned long iaid, SPtr<TIPv6Addr> addr,
+                   unsigned long pref, unsigned long valid);
+    bool delTAAddr(SPtr<TDUID> duid,unsigned long iaid, SPtr<TIPv6Addr> addr, bool quiet);
+
+    // prefix management
+    virtual bool delPrefix(SPtr<TDUID> clntDuid, unsigned long IAID, SPtr<TIPv6Addr> prefix, bool quiet);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     // how many addresses does this client have?
     unsigned long getAddrCount(SPtr<TDUID> duid);
 
+<<<<<<< HEAD
     void doDuties();
     
     void getAddrsCount(SPtr<List(TSrvCfgAddrClass)> classes, long *clntCnt,
 		       long *addrCnt, SPtr<TDUID> duid, int iface);
+=======
+    void doDuties(std::vector<TExpiredInfo>& addrLst,
+                  std::vector<TExpiredInfo>& tempAddrLst,
+                  std::vector<TExpiredInfo>& prefixLst);
+
+    void getAddrsCount(SPtr<List(TSrvCfgAddrClass)> classes, long *clntCnt,
+                       long *addrCnt, SPtr<TDUID> duid, int iface);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     bool addrIsFree(SPtr<TIPv6Addr> addr);
     bool taAddrIsFree(SPtr<TIPv6Addr> addr);
 
     SPtr<TIPv6Addr> getFirstAddr(SPtr<TDUID> clntDuid);
 
+<<<<<<< HEAD
     // address caching
     SPtr<TIPv6Addr> getCachedAddr(SPtr<TDUID> clntDuid);
     bool delCachedAddr(SPtr<TIPv6Addr> addr);
     bool delCachedAddr(SPtr<TDUID> clntDuid);
     void addCachedAddr(SPtr<TDUID> clntDuid, SPtr<TIPv6Addr> cachedAddr);
+=======
+    // address and prefix caching
+    SPtr<TIPv6Addr> getCachedEntry(SPtr<TDUID> clntDuid, TAddrIA::TIAType type);
+    bool delCachedEntry(SPtr<TIPv6Addr> cachedEntry, TAddrIA::TIAType type);
+    bool delCachedEntry(SPtr<TDUID> clntDuid, TAddrIA::TIAType type);
+    void addCachedEntry(SPtr<TDUID> clntDuid, SPtr<TIPv6Addr> cachedEntry, TAddrIA::TIAType type);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     void setCacheSize(int bytes);
     void dump();
 

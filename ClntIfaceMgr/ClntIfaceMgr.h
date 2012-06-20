@@ -55,7 +55,10 @@ public:
     
     SPtr<TClntMsg> select(unsigned int timeout);
 
+<<<<<<< HEAD
     void notifyScripts(SPtr<TClntMsg> question, SPtr<TClntMsg> answer);
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #ifdef MOD_REMOTE_AUTOCONF
     bool notifyRemoteScripts(SPtr<TIPv6Addr> receivedAddr, SPtr<TIPv6Addr> serverAddr, int ifindex);
 #endif    

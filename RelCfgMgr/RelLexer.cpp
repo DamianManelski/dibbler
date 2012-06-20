@@ -58,6 +58,10 @@ typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
+<<<<<<< HEAD
+=======
+#endif /* ! C99 */
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -88,15 +92,21 @@ typedef unsigned int flex_uint32_t;
 #define UINT32_MAX             (4294967295U)
 #endif
 
+<<<<<<< HEAD
 #endif /* ! C99 */
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #endif /* ! FLEXINT_H */
 
 /* begin standard C++ headers. */
 #include <iostream> 
 #include <errno.h>
 #include <cstdlib>
+<<<<<<< HEAD
 #include <cstdio>
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include <cstring>
 /* end standard C++ headers. */
 
@@ -154,6 +164,7 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+<<<<<<< HEAD
 #ifdef __ia64__
 /* On IA-64, the buffer size is 16k, not 8k.
  * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
@@ -163,6 +174,9 @@ typedef unsigned int flex_uint32_t;
 #else
 #define YY_BUF_SIZE 16384
 #endif /* __ia64__ */
+=======
+#define YY_BUF_SIZE 16384
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -912,7 +926,11 @@ using namespace std;
 namespace std{
   yy_RelParser_stype yylval;
 }
+<<<<<<< HEAD
 #line 916 "RelLexer.cpp"
+=======
+#line 906 "RelLexer.cpp"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 #define INITIAL 0
 #define COMMENT 1
@@ -944,12 +962,16 @@ static int yy_flex_strlen (yyconst char * );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+<<<<<<< HEAD
 #ifdef __ia64__
 /* On IA-64, the buffer size is 16k, not 8k */
 #define YY_READ_BUF_SIZE 16384
 #else
 #define YY_READ_BUF_SIZE 8192
 #endif /* __ia64__ */
+=======
+#define YY_READ_BUF_SIZE 8192
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -1022,7 +1044,11 @@ YY_DECL
 #line 43 "RelLexer.l"
 
 
+<<<<<<< HEAD
 #line 1026 "RelLexer.cpp"
+=======
+#line 1011 "RelLexer.cpp"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 	if ( !(yy_init) )
 		{
@@ -1447,7 +1473,11 @@ YY_RULE_SETUP
 #line 233 "RelLexer.l"
 ECHO;
 	YY_BREAK
+<<<<<<< HEAD
 #line 1451 "RelLexer.cpp"
+=======
+#line 1436 "RelLexer.cpp"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ADDR):
 	yyterminate();

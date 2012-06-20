@@ -276,7 +276,10 @@ void TSrvOptIA_NA::releaseAllAddrs(bool quiet) {
 SPtr<TSrvOptIAAddress> TSrvOptIA_NA::assignAddr(SPtr<TIPv6Addr> hint, unsigned long pref,
 						    unsigned long valid,
 						    bool quiet) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // Assign one address
     SPtr<TIPv6Addr> addr;
     SPtr<TSrvOptIAAddress> optAddr;
@@ -628,16 +631,27 @@ SPtr<TIPv6Addr> TSrvOptIA_NA::getFreeAddr(SPtr<TIPv6Addr> hint) {
     } //  if ( !invalidAddr )
 
     // do we have a cached address for that client?
+<<<<<<< HEAD
     if (addr = SrvAddrMgr().getCachedAddr(this->ClntDuid)) {
+=======
+    if (addr = SrvAddrMgr().getCachedEntry(this->ClntDuid, TAddrIA::TYPE_IA)) {
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (SrvCfgMgr().getClassByAddr(this->Iface, addr)) {
 	    Log(Info) << "Cache: Cached address " << *addr << " found. Welcome back." << LogEnd;
 	    if (SrvAddrMgr().addrIsFree(addr))
 		return addr;
 	    Log(Info) << "Unfortunately, " << addr->getPlain() << " is used." << LogEnd;
+<<<<<<< HEAD
 	    SrvAddrMgr().delCachedAddr(addr);
 	} else {
 	    Log(Warning) << "Cache: Cached address " << *addr << " found, but it is no longer valid." << LogEnd;
 	    SrvAddrMgr().delCachedAddr(addr);
+=======
+	    SrvAddrMgr().delCachedEntry(addr, TAddrIA::TYPE_IA);
+	} else {
+	    Log(Warning) << "Cache: Cached address " << *addr << " found, but it is no longer valid." << LogEnd;
+	    SrvAddrMgr().delCachedEntry(addr, TAddrIA::TYPE_IA);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	}// else
     }// if have cached address for that client
 

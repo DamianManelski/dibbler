@@ -28,6 +28,7 @@
 #include "SrvCfgMgr.h"
 #include "SrvTransMgr.h"
 
+<<<<<<< HEAD
 TSrvOptIA_PD::TSrvOptIA_PD( long IAID, long T1, long T2, TMsg* parent)
     :TOptIA_PD(IAID,T1,T2, parent) 
 {
@@ -38,6 +39,18 @@ TSrvOptIA_PD::TSrvOptIA_PD( long IAID, long T1, long T2, TMsg* parent)
 
 TSrvOptIA_PD::TSrvOptIA_PD( long IAID, long T1, long T2, int Code, string Text, TMsg* parent)
     :TOptIA_PD(IAID,T1,T2, parent) 
+=======
+TSrvOptIA_PD::TSrvOptIA_PD( long iaid, long t1, long t2, TMsg* parent)
+    :TOptIA_PD(IAID,T1,T2, parent)
+{
+    IAID=iaid;
+    T1=t1;
+    T2=t2;
+}
+
+TSrvOptIA_PD::TSrvOptIA_PD( long IAID, long T1, long T2, int Code, string Text, TMsg* parent)
+    :TOptIA_PD(IAID,T1,T2, parent)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 {
     SubOptions.append(new TSrvOptStatusCode(Code, Text, parent));
 }
@@ -46,7 +59,11 @@ TSrvOptIA_PD::TSrvOptIA_PD( long IAID, long T1, long T2, int Code, string Text, 
  * Create IA_PD option based on receive buffer
  */
 TSrvOptIA_PD::TSrvOptIA_PD( char * buf, int bufsize, TMsg* parent)
+<<<<<<< HEAD
     :TOptIA_PD(buf,bufsize, parent) 
+=======
+    :TOptIA_PD(buf,bufsize, parent)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 {
     int pos=0;
 
@@ -61,6 +78,7 @@ TSrvOptIA_PD::TSrvOptIA_PD( char * buf, int bufsize, TMsg* parent)
 
             if(allowOptInOpt(parent->getType(),OPTION_IA_PD,code)) {
 
+<<<<<<< HEAD
 		SPtr<TOpt> opt;
 		opt = SPtr<TOpt>(); /* NULL */
                 switch (code)
@@ -77,12 +95,31 @@ TSrvOptIA_PD::TSrvOptIA_PD( char * buf, int bufsize, TMsg* parent)
 		    Log(Warning) <<"Option " << code<< "not supported "
 				 <<" in  message (type=" << parent->getType()
 				 <<") in this version of server." << LogEnd;
+=======
+                SPtr<TOpt> opt;
+                opt = SPtr<TOpt>(); /* NULL */
+                switch (code)
+                {
+                case OPTION_IAPREFIX:
+                    opt = (Ptr*)SPtr<TSrvOptIAPrefix>
+                        (new TSrvOptIAPrefix(buf+pos,length,this->Parent));
+                    break;
+                case OPTION_STATUS_CODE:
+                    opt = (Ptr*)SPtr<TSrvOptStatusCode>
+                        (new TSrvOptStatusCode(buf+pos,length,this->Parent));
+                    break;
+                default:
+                    Log(Warning) <<"Option " << code<< "not supported "
+                                 <<" in  message (type=" << parent->getType()
+                                 <<") in this version of server." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
                     break;
                 }
                 if((opt)&&(opt->isValid()))
                     SubOptions.append(opt);
             }
             else {
+<<<<<<< HEAD
 		Log(Warning) << "Illegal option received (type=" << code
 			     << ") in an IA_PD option." << LogEnd;
 	    }
@@ -90,6 +127,15 @@ TSrvOptIA_PD::TSrvOptIA_PD( char * buf, int bufsize, TMsg* parent)
         else {
 	    Log(Warning) << "Unknown option received (type=" << code
 			 << ") in an IA_PD option." << LogEnd;
+=======
+                Log(Warning) << "Illegal option received (type=" << code
+                             << ") in an IA_PD option." << LogEnd;
+            }
+        }
+        else {
+            Log(Warning) << "Unknown option received (type=" << code
+                         << ") in an IA_PD option." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         };
         pos+=length;
     }
@@ -102,6 +148,7 @@ void TSrvOptIA_PD::releaseAllPrefixes(bool quiet) {
     SPtr<TOptIAPrefix> optPrefix;
     this->firstOption();
     while ( opt = this->getOption() ) {
+<<<<<<< HEAD
 	if (opt->getOptType() != OPTION_IAPREFIX)
 	    continue;
 	optPrefix = (Ptr*) opt;
@@ -109,6 +156,44 @@ void TSrvOptIA_PD::releaseAllPrefixes(bool quiet) {
 	//SrvAddrMgr().delClntAddr(this->ClntDuid, this->IAID, prefix, quiet); // not sure about that
 	SrvCfgMgr().decrPrefixCount(this->Iface, prefix);
     }
+=======
+        if (opt->getOptType() != OPTION_IAPREFIX)
+            continue;
+        optPrefix = (Ptr*) opt;
+        prefix = optPrefix->getPrefix();
+        SrvCfgMgr().decrPrefixCount(this->Iface, prefix);
+    }
+}
+
+/// @brief checks if there are existing leases (and assigns them)
+///
+///
+/// @return true, if existing lease(s) are found
+bool TSrvOptIA_PD::existingLease() {
+    SPtr<TAddrClient> client = SrvAddrMgr().getClient(ClntDuid);
+    if (!client)
+        return false;
+    SPtr<TAddrIA> pd = client->getPD(IAID);
+    if (!pd)
+        return false;
+    if (!pd->getPrefixCount())
+        return false;
+
+    SPtr<TAddrPrefix> prefix;
+    pd->firstPrefix();
+    while (prefix = pd->getPrefix()) {
+        Log(Debug) << "Assinging existing lease: prefix=" << prefix->get()->getPlain() << "/" << prefix->getLength()
+                   << ", pref=" << prefix->getPref() << ", valid=" << prefix->getValid() << LogEnd;
+        SPtr<TOpt> optPrefix = new TSrvOptIAPrefix(prefix->get(), prefix->getLength(), 
+                                                   prefix->getPref(), prefix->getValid(), this->Parent);
+        SubOptions.append((Ptr*)optPrefix);
+    }
+
+    T1 = pd->getT1();
+    T2 = pd->getT2();
+
+    return true;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 /**
@@ -124,6 +209,16 @@ int TSrvOptIA_PD::assignPrefix(SPtr<TIPv6Addr> hint, bool fake) {
     SPtr<TSrvOptIAPrefix> optPrefix;
     SPtr<TSrvCfgPD> ptrPD;
     List(TIPv6Addr) prefixLst;
+<<<<<<< HEAD
+=======
+    SPtr<TIPv6Addr> cached;
+
+    if (hint->getPlain()==string("::") ) {
+        cached = SrvAddrMgr().getCachedEntry(ClntDuid, TAddrIA::TYPE_PD);
+        if (cached)
+            hint = cached;
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     // get address
     prefixLst.clear();
@@ -137,6 +232,7 @@ int TSrvOptIA_PD::assignPrefix(SPtr<TIPv6Addr> hint, bool fake) {
       SubOptions.append((Ptr*)optPrefix);
 
       if (!fake) {
+<<<<<<< HEAD
 	    // every prefix has to be remembered in AddrMgr, e.g. when there are 2 pools defined,
 	    // prefixLst contains entries from each pool, so 2 prefixes has to be remembered
 	    SrvAddrMgr().addPrefix(this->ClntDuid, this->ClntAddr, this->Iface, this->IAID, this->T1, this->T2,
@@ -146,6 +242,17 @@ int TSrvOptIA_PD::assignPrefix(SPtr<TIPv6Addr> hint, bool fake) {
           SrvCfgMgr().incrPrefixCount(Iface, prefix);
           alreadyIncreased = true;
 	    }
+=======
+            // every prefix has to be remembered in AddrMgr, e.g. when there are 2 pools defined,
+            // prefixLst contains entries from each pool, so 2 prefixes has to be remembered
+            SrvAddrMgr().addPrefix(this->ClntDuid, this->ClntAddr, this->Iface, this->IAID, this->T1, this->T2,
+                           prefix, this->Prefered, this->Valid, this->PDLength, false);
+            if (!alreadyIncreased) {
+          // but CfgMgr has to increase usage only once. Don't ask my why :)
+          SrvCfgMgr().incrPrefixCount(Iface, prefix);
+          alreadyIncreased = true;
+            }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
       }
     }
     Log(Info) << "PD:" << (fake?"(would be)":"") << " assigned prefix(es):" << buf.str() << LogEnd;
@@ -159,7 +266,11 @@ int TSrvOptIA_PD::assignPrefix(SPtr<TIPv6Addr> hint, bool fake) {
 // so far it is enough here
 // constructor used only in RENEW, REBIND, DECLINE and RELEASE
 TSrvOptIA_PD::TSrvOptIA_PD(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TIPv6Addr> clntAddr, SPtr<TDUID> clntDuid,
+<<<<<<< HEAD
 		 int iface, int msgType , TMsg* parent)
+=======
+                           int iface, int msgType , TMsg* parent)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     :TOptIA_PD(queryOpt->getIAID(), 0x7fffffff, 0x7fffffff, parent)
 {
     this->ClntDuid  = clntDuid;
@@ -168,24 +279,45 @@ TSrvOptIA_PD::TSrvOptIA_PD(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TIPv6Addr> clntAddr
 
     SPtr<TSrvCfgIface> ptrIface = SrvCfgMgr().getIfaceByID(Iface);
     if (!ptrIface) {
+<<<<<<< HEAD
 	      Log(Error) << "Unable to find interface with ifindex=" << Iface << ". Something is wrong, VERY wrong." << LogEnd;
 	      return;
+=======
+        Log(Error) << "Unable to find interface with ifindex="
+                   << Iface << ". Something is wrong, VERY wrong." << LogEnd;
+        return;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     // is the prefix delegation supported?
     if ( !ptrIface->supportPrefixDelegation() ) {
+<<<<<<< HEAD
 	      SPtr<TSrvOptStatusCode> ptrStatus;
 	      ptrStatus = new TSrvOptStatusCode(STATUSCODE_NOPREFIXAVAIL,
 					        "Server support for prefix delegation is not enabled. Sorry buddy.",this->Parent);
               this->SubOptions.append((Ptr*)ptrStatus);
 	      return;
+=======
+        SPtr<TSrvOptStatusCode> ptrStatus;
+        ptrStatus = new TSrvOptStatusCode(STATUSCODE_NOPREFIXAVAIL,
+                                          "Server support for prefix delegation is not enabled. Sorry buddy.",
+                                          Parent);
+        this->SubOptions.append((Ptr*)ptrStatus);
+        return;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     bool fake  = false; // is this assignment for real?
     if (msgType == SOLICIT_MSG)
+<<<<<<< HEAD
 	fake = true;
     if (parent->getOption(OPTION_RAPID_COMMIT))
 	fake = false;
+=======
+        fake = true;
+    if (parent->getOption(OPTION_RAPID_COMMIT))
+        fake = false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     switch (msgType) {
     case SOLICIT_MSG:
@@ -210,10 +342,17 @@ TSrvOptIA_PD::TSrvOptIA_PD(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TIPv6Addr> clntAddr
         this->decline(queryOpt, ptrIface);
         break;
     default: {
+<<<<<<< HEAD
 	Log(Warning) << "Unknown message type (" << msgType
 		     << "). Cannot generate OPTION_PD."<< LogEnd;
         SubOptions.append(new TSrvOptStatusCode(STATUSCODE_UNSPECFAIL,
 						"Unknown message type.",this->Parent));
+=======
+        Log(Warning) << "Unknown message type (" << msgType
+                     << "). Cannot generate OPTION_PD."<< LogEnd;
+        SubOptions.append(new TSrvOptStatusCode(STATUSCODE_UNSPECFAIL,
+                                                "Unknown message type.",this->Parent));
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         break;
     }
     }
@@ -232,6 +371,7 @@ void TSrvOptIA_PD::solicitRequest(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TSrvCfgIface
     // --- Is this PD without IAPREFIX options? ---
     SPtr<TIPv6Addr> hint = 0;
     if (!queryOpt->countPrefixes()) {
+<<<<<<< HEAD
 	Log(Notice) << "PD option (with IAPREFIX suboptions missing) received. " << LogEnd;
 	hint  = new TIPv6Addr(); /* :: - any address */
 	this->Prefered = DHCPV6_INFINITY;
@@ -246,16 +386,47 @@ void TSrvOptIA_PD::solicitRequest(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TSrvCfgIface
 
     // assign prefixes
     int status = this->assignPrefix(hint, fake);
+=======
+        Log(Notice) << "PD option (with IAPREFIX suboptions missing) received. " << LogEnd;
+        hint = new TIPv6Addr(); /* :: - any address */
+        this->Prefered = DHCPV6_INFINITY;
+        this->Valid    = DHCPV6_INFINITY;
+    } else {
+        SPtr<TSrvOptIAPrefix> hintPrefix = (Ptr*) queryOpt->getOption(OPTION_IAPREFIX);
+        hint  = hintPrefix->getPrefix();
+        Log(Info) << "PD: PD option with " << hint->getPlain() << " as a hint received." << LogEnd;
+        this->Prefered  = hintPrefix->getPref();
+        this->Valid     = hintPrefix->getValid();
+    }
+
+    int status;
+    if (existingLease()) {
+        // re-issue existing leases
+        status = STATUSCODE_SUCCESS;
+    } else {
+        // assign new prefixes
+        status = assignPrefix(hint, fake);
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     // include status code
     SPtr<TSrvOptStatusCode> ptrStatus;
     if (status==STATUSCODE_SUCCESS) {
+<<<<<<< HEAD
 	ostringstream tmp;
 	tmp << countPrefixes() << " prefix(es) granted.";
 	ptrStatus = new TSrvOptStatusCode(STATUSCODE_SUCCESS, tmp.str(),  this->Parent);
     } else {
 	ptrStatus = new TSrvOptStatusCode(status,
 					  "Unable to provide any prefixes. Sorry.", this->Parent);
+=======
+        ostringstream tmp;
+        tmp << countPrefixes() << " prefix(es) granted.";
+        ptrStatus = new TSrvOptStatusCode(STATUSCODE_SUCCESS, tmp.str(),  this->Parent);
+    } else {
+        ptrStatus = new TSrvOptStatusCode(status,
+                                          "Unable to provide any prefixes. Sorry.", this->Parent);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     this->SubOptions.append((Ptr*)ptrStatus);
     return;
@@ -272,7 +443,11 @@ void TSrvOptIA_PD::renew(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TSrvCfgIface> iface) 
     ptrClient = SrvAddrMgr().getClient(this->ClntDuid);
     if (!ptrClient) {
         SubOptions.append(new TSrvOptStatusCode(STATUSCODE_NOBINDING,"Who are you? Do I know you?",
+<<<<<<< HEAD
 						this->Parent));
+=======
+                                                this->Parent));
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         return;
     }
 
@@ -281,7 +456,11 @@ void TSrvOptIA_PD::renew(SPtr<TSrvOptIA_PD> queryOpt, SPtr<TSrvCfgIface> iface) 
     ptrIA = ptrClient->getPD(this->IAID);
     if (!ptrIA) {
         SubOptions.append(new TSrvOptStatusCode(STATUSCODE_NOBINDING,"I see this IAID first time.",
+<<<<<<< HEAD
 						this->Parent ));
+=======
+                                                this->Parent ));
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         return;
     }
 
@@ -378,23 +557,40 @@ List(TIPv6Addr) TSrvOptIA_PD::getFreePrefixes(SPtr<TIPv6Addr> hint) {
     // is it anyaddress (::)?
     SPtr<TIPv6Addr> anyaddr = new TIPv6Addr();
     if (*anyaddr==*hint) {
+<<<<<<< HEAD
 	Log(Debug) << "PD: Client requested unspecified (" << *hint
 		   << ") prefix. Hint ignored." << LogEnd;
 	validHint = false;
+=======
+        Log(Debug) << "PD: Client requested unspecified (" << *hint
+                   << ") prefix. Hint ignored." << LogEnd;
+        validHint = false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     // is it multicast address (ff...)?
     if ((*(hint->getAddr()))==0xff) {
+<<<<<<< HEAD
 	Log(Debug) << "PD: Client requested multicast (" << *hint
 		   << ") prefix. Hint ignored." << LogEnd;
 	validHint = false;
+=======
+        Log(Debug) << "PD: Client requested multicast (" << *hint
+                   << ") prefix. Hint ignored." << LogEnd;
+        validHint = false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     // is it link-local address (fe80::...)?
     char linklocal[]={0xfe, 0x80};
     if (!memcmp(hint->getAddr(),linklocal,2)) {
+<<<<<<< HEAD
 	Log(Debug) << "PD: Client requested link-local (" << *hint << ") prefix. Hint ignored." << LogEnd;
 	validHint = false;
+=======
+        Log(Debug) << "PD: Client requested link-local (" << *hint << ") prefix. Hint ignored." << LogEnd;
+        validHint = false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     // Get the request message from client
@@ -406,6 +602,7 @@ List(TIPv6Addr) TSrvOptIA_PD::getFreePrefixes(SPtr<TIPv6Addr> hint) {
 
       // if the PD allow the hint, based on DUID, Addr, and Msg from client
      if (ptrPD && ptrPD->clntSupported(ClntDuid, ClntAddr, requestMsg ))
+<<<<<<< HEAD
 	 {
 		  // case 2: address belongs to supported class, and is free
 		  if ( ptrPD && SrvAddrMgr().prefixIsFree(hint) ) {
@@ -434,6 +631,36 @@ List(TIPv6Addr) TSrvOptIA_PD::getFreePrefixes(SPtr<TIPv6Addr> hint) {
 			return lst;
 		  } // if hint is used
 	   } // if the PD support hint, based on Client Class
+=======
+         {
+                  // case 2: address belongs to supported class, and is free
+                  if ( ptrPD && SrvAddrMgr().prefixIsFree(hint) ) {
+                        Log(Debug) << "PD: Requested prefix (" << *hint << ") is free, great!" << LogEnd;
+                        this->PDLength = ptrPD->getPD_Length();
+                        this->Prefered = ptrPD->getPrefered(this->Prefered);
+                        this->Valid    = ptrPD->getValid(this->Valid);
+                        this->T1       = ptrPD->getT1(this->T1);
+                        this->T2       = ptrPD->getT2(this->T2);
+                        lst.append(hint);
+                        return lst;
+                  }
+
+                  // case 3: hint is used, but we can assign another prefix from the same pool
+                  if (ptrPD) {
+                        do {
+                          prefix=ptrPD->getRandomPrefix();
+                        } while (!SrvAddrMgr().prefixIsFree(prefix));
+                        lst.append(prefix);
+
+                        this->PDLength = ptrPD->getPD_Length();
+                        this->Prefered = ptrPD->getPrefered(this->Prefered);
+                        this->Valid    = ptrPD->getValid(this->Valid);
+                        this->T1       = ptrPD->getT1(this->T1);
+                        this->T2       = ptrPD->getT2(this->T2);
+                        return lst;
+                  } // if hint is used
+           } // if the PD support hint, based on Client Class
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     } // if valid hint
 
     // case 1: no hint provided, assign one prefix from each pool
@@ -442,19 +669,31 @@ List(TIPv6Addr) TSrvOptIA_PD::getFreePrefixes(SPtr<TIPv6Addr> hint) {
 
     while ( ptrPD = ptrIface->getPD())
     {
+<<<<<<< HEAD
       	if (!ptrPD->clntSupported(ClntDuid, ClntAddr, requestMsg ))
       		continue;
       	break;
+=======
+        if (!ptrPD->clntSupported(ClntDuid, ClntAddr, requestMsg ))
+                continue;
+        break;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     if (!ptrPD)
     {
+<<<<<<< HEAD
     	Log(Warning) << "Unable to find any PD for this client." << LogEnd;
     	return lst;  // return empty list
+=======
+        Log(Warning) << "Unable to find any PD for this client." << LogEnd;
+        return lst;  // return empty list
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
 
     while (true) {
+<<<<<<< HEAD
 	List(TIPv6Addr) lst;
 	lst = ptrPD->getRandomList();
 	lst.first();
@@ -472,5 +711,24 @@ List(TIPv6Addr) TSrvOptIA_PD::getFreePrefixes(SPtr<TIPv6Addr> hint) {
 	    this->T2       = ptrPD->getT2(this->T2);
 	    return lst;
 	}
+=======
+        List(TIPv6Addr) lst;
+        lst = ptrPD->getRandomList();
+        lst.first();
+        bool allFree = true;
+        while (prefix = lst.get()) {
+            if (!SrvAddrMgr().prefixIsFree(prefix)) {
+                allFree = false;
+            }
+        }
+        if (allFree) {
+            this->PDLength = ptrPD->getPD_Length();
+            this->Prefered = ptrPD->getPrefered(this->Prefered);
+            this->Valid    = ptrPD->getValid(this->Valid);
+            this->T1       = ptrPD->getT1(this->T1);
+            this->T2       = ptrPD->getT2(this->T2);
+            return lst;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     };
 }

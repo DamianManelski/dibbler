@@ -22,6 +22,7 @@ public:
     TReqMsg(int iface, SPtr<TIPv6Addr> addr, int msgType);
     // used to create TMsg object based on received char[] data
     TReqMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize);
+<<<<<<< HEAD
 
     void addOption(SPtr<TOpt> opt);
 
@@ -37,6 +38,10 @@ public:
     void isComletion(); //check completion of server replay (rfc 5460 p.11)
     void multipleQuery();//requestor can send multiple query to receive more data
 
+=======
+    void addOption(SPtr<TOpt> opt);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     string getName();
 };
 

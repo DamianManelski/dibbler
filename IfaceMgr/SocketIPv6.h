@@ -4,7 +4,11 @@
  * authors: Tomasz Mrugalski <thomson@klub.com.pl>
  *          Marek Senderski <msend@o2.pl>
  * changes: Krzysztof Wnuk <keczi@poczta.onet.pl>
+<<<<<<< HEAD
  *          Micha Kowalczuk <michal@kowalczuk.eu>
+=======
+ *          Micha³ Kowalczuk <michal@kowalczuk.eu>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  *
  * released under GNU GPL v2 only licence
  *
@@ -31,6 +35,7 @@ using namespace std;
 class TIfaceSocket {
     friend ostream& operator<<(ostream& strum, TIfaceSocket &x);
  public:
+<<<<<<< HEAD
     TIfaceSocket(char * iface,int ifaceid, int port, SPtr<TIPv6Addr> addr, bool ifaceonly, bool reuse);
     TIfaceSocket(char * iface,int ifaceid, int port, bool ifaceonly, bool reuse);
     TIfaceSocket(char *iface, int ifaceid, int port, SPtr<TIPv6Addr> addr, bool ifaceonly, bool reuse,int socketType, int isMulticast);
@@ -39,6 +44,17 @@ class TIfaceSocket {
     int send(char * buf,int len, SPtr<TIPv6Addr> addr,int port);
     int recv(char * buf,SPtr<TIPv6Addr> addr);
 
+=======
+    TIfaceSocket(char * iface,int ifaceid, int port, 
+		     SPtr<TIPv6Addr> addr, bool ifaceonly, bool reuse);
+    TIfaceSocket(char * iface,int ifaceid, int port,
+		     bool ifaceonly, bool reuse);
+   
+    // ---transmission---
+    int send(char * buf,int len, SPtr<TIPv6Addr> addr,int port);
+    int recv(char * buf,SPtr<TIPv6Addr> addr);
+    
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // ---get info---
     int getFD();
     int getPort();
@@ -57,10 +73,15 @@ class TIfaceSocket {
     ~TIfaceSocket();
  private:
     // adds socket to this interface
+<<<<<<< HEAD
 
     int createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr,int port, bool ifaceonly, bool reuse);
     int createTcpSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr, int port, bool ifaceonly, bool reuse,bool sockType,int isMulticast);
 
+=======
+    int createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr, 
+		     int port, bool ifaceonly, bool reuse);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     void printError(int error, char * iface, int ifaceid, SPtr<TIPv6Addr> addr, int port);
 
     // FileDescriptor
@@ -84,8 +105,11 @@ class TIfaceSocket {
     // bounded address 
     SPtr<TIPv6Addr> Addr;
 
+<<<<<<< HEAD
     //socket Type ( if 1 - tcp, if 0 - udp)
     bool SocketType;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // true = bounded to this interface only
     bool IfaceOnly;
 

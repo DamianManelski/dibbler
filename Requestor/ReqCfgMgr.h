@@ -21,7 +21,10 @@ typedef struct {
     // message specific parameters
     char * addr;
     char * duid;
+<<<<<<< HEAD
     char * bulk;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 } ReqCfgMgr;
 
 #endif

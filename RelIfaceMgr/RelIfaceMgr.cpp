@@ -18,6 +18,10 @@
 #include "RelMsgRelayForw.h"
 #include "RelMsgRelayRepl.h"
 #include "RelOptInterfaceID.h"
+<<<<<<< HEAD
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 TRelIfaceMgr * TRelIfaceMgr::Instance = 0;
 
@@ -166,8 +170,13 @@ SPtr<TRelMsg> TRelIfaceMgr::decodeRelayRepl(SPtr<TIfaceIface> iface,
     // options: only INTERFACEID and RELAY_MSG are allowed
     while (bufsize>=4) {
 
+<<<<<<< HEAD
 	unsigned short code = ntohs( *((unsigned short*) (buf)));
 	unsigned short len  = ntohs( *((unsigned short*) (buf+2)));
+=======
+	unsigned short code = readUint16(buf);
+	unsigned short len  = readUint16(buf + sizeof(uint16_t));
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (len>bufsize) {
 	    Log(Error) << "Message RELAY-REPL truncated. There are " << (bufsize-len) 
 		       << " bytes left to parse. Message dropped." << LogEnd;

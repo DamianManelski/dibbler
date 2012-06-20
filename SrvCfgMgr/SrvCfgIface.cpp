@@ -184,11 +184,19 @@ void TSrvCfgIface::addClntAddr(SPtr<TIPv6Addr> ptrAddr, bool quiet /* =false*/) 
     this->firstAddrClass();
     while (ptrClass = this->getAddrClass() ) {
 	if (ptrClass->addrInPool(ptrAddr)) {
+<<<<<<< HEAD
 	    ptrClass->incrAssigned();
 	    if (quiet)
 		return;
 	    Log(Debug) << "Address usage for class " << ptrClass->getID()
 		       << " increased by 1." << LogEnd;
+=======
+	    unsigned int count = ptrClass->incrAssigned();
+	    if (quiet)
+		return;
+	    Log(Debug) << "Address usage for class " << ptrClass->getID()
+		       << " increased to " << count << "." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    return;
 	}
     }
@@ -201,11 +209,19 @@ void TSrvCfgIface::delClntAddr(SPtr<TIPv6Addr> ptrAddr, bool quiet /* =false*/) 
     this->firstAddrClass();
     while (ptrClass = this->getAddrClass() ) {
 	if (ptrClass->addrInPool(ptrAddr)) {
+<<<<<<< HEAD
 	    ptrClass->decrAssigned();
 	    if (quiet)
 		return;
 	    Log(Debug) << "Address usage for class " << ptrClass->getID()
 		       << " decreased by 1." << LogEnd;
+=======
+	    unsigned long count = ptrClass->decrAssigned();
+	    if (quiet)
+		return;
+	    Log(Debug) << "Address usage for class " << ptrClass->getID()
+		       << " decreased to " << count << "." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    return;
 	}
     }
@@ -264,14 +280,26 @@ SPtr<TSrvCfgPD> TSrvCfgIface::getPDByID(unsigned long id) {
     return 0;
 }
 
+<<<<<<< HEAD
 bool TSrvCfgIface::addClntPrefix(SPtr<TIPv6Addr> ptrAddr) {
+=======
+bool TSrvCfgIface::addClntPrefix(SPtr<TIPv6Addr> ptrAddr, bool quiet /* =false */) {
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TSrvCfgPD> ptrPD;
     this->firstPD();
     while (ptrPD = this->getPD() ) {
 	if (ptrPD->prefixInPool(ptrAddr)) {
+<<<<<<< HEAD
 	    Log(Debug) << "PD: Prefix usage for class " << ptrPD->getID()
 		       << " increased by 1." << LogEnd;
 	    ptrPD->incrAssigned();
+=======
+	    unsigned long count = ptrPD->incrAssigned();
+            if (quiet)
+                return true;
+	    Log(Debug) << "PD: Prefix usage for class " << ptrPD->getID()
+		       << " increased to " << count << "." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    return true;
 	}
     }
@@ -280,14 +308,26 @@ bool TSrvCfgIface::addClntPrefix(SPtr<TIPv6Addr> ptrAddr) {
     return false;
 }
 
+<<<<<<< HEAD
 bool TSrvCfgIface::delClntPrefix(SPtr<TIPv6Addr> ptrAddr) {
+=======
+bool TSrvCfgIface::delClntPrefix(SPtr<TIPv6Addr> ptrAddr, bool quiet /* =false */) {
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TSrvCfgPD> ptrPD;
     this->firstPD();
     while (ptrPD = this->getPD() ) {
 	if (ptrPD->prefixInPool(ptrAddr)) {
+<<<<<<< HEAD
 	    ptrPD->decrAssigned();
 	    Log(Debug) << "PD: Prefix usage for class " << ptrPD->getID()
 		       << " decreased by 1." << LogEnd;
+=======
+	    unsigned long count = ptrPD->decrAssigned();
+            if (quiet)
+                return true;
+	    Log(Debug) << "PD: Prefix usage for class " << ptrPD->getID()
+		       << " decreased to " << count << "." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    return true;
 	}
     }
@@ -489,10 +529,17 @@ SPtr<TFQDN> TSrvCfgIface::getFQDNName(SPtr<TDUID> duid, SPtr<TIPv6Addr> addr, st
 
 	if (foo->isUsed())
 	{ // client sent a hint, but it is used currently
+<<<<<<< HEAD
             if ( foo->getDuid() == *duid && foo->getAddr() == *addr) {
                 Log(Debug) << "FQDN: This client (DUID=" << duid->getPlain() 
                            << ") has already assigned name " << foo->Name
                            <<" to its address " << foo->getAddr().getPlain() << "." << LogEnd;
+=======
+	  if ( (foo->getDuid()) && (*foo->getDuid() == *duid) && (*foo->getAddr() == *addr)) {
+                Log(Debug) << "FQDN: This client (DUID=" << duid->getPlain() 
+                           << ") has already assigned name " << foo->Name
+                           <<" to its address " << foo->getAddr()->getPlain() << "." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
                 return foo;
             }
 

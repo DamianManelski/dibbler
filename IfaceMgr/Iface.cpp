@@ -288,6 +288,7 @@ bool TIfaceIface::addSocket(SPtr<TIPv6Addr> addr,int port, bool ifaceonly, bool 
     return true;
 }
 
+<<<<<<< HEAD
 bool TIfaceIface::addTcpSocket(SPtr<TIPv6Addr> addr, int port, bool ifaceonly, bool reuse,bool socketType, bool isMulticast)
 {
     socketType = 1;
@@ -304,12 +305,19 @@ bool TIfaceIface::addTcpSocket(SPtr<TIPv6Addr> addr, int port, bool ifaceonly, b
 
 
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #if 0
 /*
  * binds socket on whole interface
  */
 bool TIfaceIface::addSocket(int port, bool ifaceonly, bool reuse) {
+<<<<<<< HEAD
     SPtr<TIfaceSocket> ptr = new TIfaceSocket(this->Name, this->ID, port, ifaceonly, reuse);
+=======
+    SPtr<TIfaceSocket> ptr = 
+	new TIfaceSocket(this->Name, this->ID, port, ifaceonly, reuse);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     if (ptr->getStatus()!=STATE_CONFIGURED) {
 	      return false;
     }

@@ -12,6 +12,7 @@
  */
 
 #include <sstream>
+<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -19,6 +20,9 @@
 #include <netinet/in.h>
 #endif
 
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "SrvMsg.h"
 #include "SrvTransMgr.h"
 #include "OptEmpty.h"
@@ -35,8 +39,11 @@
 #include "SrvOptLQ.h"
 #include "SrvOptTA.h"
 #include "SrvCfgOptions.h"
+<<<<<<< HEAD
 
 // --- options ---
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "SrvOptDNSServers.h"
 #include "SrvOptDomainName.h"
 #include "SrvOptNTPServers.h"
@@ -78,7 +85,11 @@
  * @param transID 
  */
 TSrvMsg::TSrvMsg(int iface, SPtr<TIPv6Addr> addr, int msgType, long transID)
+<<<<<<< HEAD
                  :TMsg(iface, addr, msgType, transID)
+=======
+    :TMsg(iface, addr, msgType, transID)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 {
     this->Relays = 0;
 
@@ -108,7 +119,11 @@ TSrvMsg::TSrvMsg(int iface, SPtr<TIPv6Addr> addr, int msgType, long transID)
  */
 TSrvMsg::TSrvMsg(int iface,  SPtr<TIPv6Addr> addr,
                  char* buf,  int bufSize)
+<<<<<<< HEAD
                  :TMsg(iface, addr, buf, bufSize)
+=======
+    :TMsg(iface, addr, buf, bufSize)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 {
     this->Relays = 0;
 
@@ -426,11 +441,19 @@ int TSrvMsg::storeSelfRelay(char * buf, int relayDepth, ESrvIfaceIdOrder order)
 	}
     }
 
+<<<<<<< HEAD
     *(short*)(buf+offset) = htons(OPTION_RELAY_MSG);
     offset+=2;
     *(short*)(buf+offset) = htons(len[relayDepth]);
     offset+=2;
     
+=======
+    writeUint16((buf+offset), OPTION_RELAY_MSG);
+    offset += sizeof(uint16_t);
+    writeUint16((buf+offset), len[relayDepth]);
+    offset += sizeof(uint16_t);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     offset += storeSelfRelay(buf+offset, relayDepth+1, order);
 
     if (order == SRV_IFACE_ID_ORDER_AFTER)
@@ -822,6 +845,7 @@ SPtr<TSrvOptFQDN> TSrvMsg::prepareFQDN(SPtr<TSrvOptFQDN> requestFQDN, SPtr<TDUID
 	// Setting the O Flag correctly according to the difference between O flags
 	optFQDN->setOFlag(requestFQDN->getSFlag() /*xor 0*/);
 	
+<<<<<<< HEAD
 	SPtr<TIPv6Addr> DNSAddr = SrvCfgMgr().fqdnDdnsAddress();
 	if (!DNSAddr) {
 	    Log(Debug) << "DDNS: DDNS address not specified, using first address used in DNS nameserver option" << LogEnd;
@@ -834,6 +858,9 @@ SPtr<TSrvOptFQDN> TSrvMsg::prepareFQDN(SPtr<TSrvOptFQDN> requestFQDN, SPtr<TDUID
 	    if (DNSSrvLst.count())
 		DNSAddr = DNSSrvLst.get();
 	}
+=======
+	SPtr<TIPv6Addr> DNSAddr = SrvCfgMgr().getDDNSAddress(Iface);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (!DNSAddr) {
 	    Log(Error) << "DDNS: DNS Update aborted. DNS server address is not specified." << LogEnd;
 	    return 0;
@@ -861,16 +888,27 @@ SPtr<TSrvOptFQDN> TSrvMsg::prepareFQDN(SPtr<TSrvOptFQDN> requestFQDN, SPtr<TDUID
 	char zoneroot[128];
 	doRevDnsZoneRoot(IPv6Addr->getAddr(), zoneroot, ptrIface->getRevDNSZoneRootLength());
 #ifndef MOD_SRV_DISABLE_DNSUPDATE
+<<<<<<< HEAD
 	TCfgMgr::DNSUpdateProtocol proto = SrvCfgMgr().getDDNSProtocol();
 	DNSUpdate::DnsUpdateProtocol proto2 = DNSUpdate::DNSUPDATE_TCP;
 
 	// that's ugly but required. Otherwise we would have to include CfgMgr.h in DNSUpdate.h
 	// and that would include both poslib and Dibbler headers in one place. Universe would implode then.
+=======
+
+	// that's ugly but required. Otherwise we would have to include CfgMgr.h in DNSUpdate.h
+	// and that would include both poslib and Dibbler headers in one place. Universe would implode then.
+	TCfgMgr::DNSUpdateProtocol proto = SrvCfgMgr().getDDNSProtocol();
+	DNSUpdate::DnsUpdateProtocol proto2 = DNSUpdate::DNSUPDATE_TCP;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (proto == TCfgMgr::DNSUPDATE_UDP)
 	    proto2 = DNSUpdate::DNSUPDATE_UDP;
 	if (proto == TCfgMgr::DNSUPDATE_ANY)
 	    proto2 = DNSUpdate::DNSUPDATE_ANY;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	unsigned int timeout = SrvCfgMgr().getDDNSTimeout();
 	
 	if (FQDNMode==1){
@@ -943,13 +981,30 @@ void TSrvMsg::fqdnRelease(SPtr<TSrvCfgIface> ptrIface, SPtr<TAddrIA> ptrIA, SPtr
     char zoneroot[128];
     doRevDnsZoneRoot(clntAddr->getAddr(), zoneroot, ptrIface->getRevDNSZoneRootLength());
 
+<<<<<<< HEAD
+=======
+
+    // that's ugly but required. Otherwise we would have to include CfgMgr.h in DNSUpdate.h
+    // and that would include both poslib and Dibbler headers in one place. Universe would implode then.
+    TCfgMgr::DNSUpdateProtocol proto = SrvCfgMgr().getDDNSProtocol();
+    DNSUpdate::DnsUpdateProtocol proto2 = DNSUpdate::DNSUPDATE_TCP;
+    if (proto == TCfgMgr::DNSUPDATE_UDP)
+        proto2 = DNSUpdate::DNSUPDATE_UDP;
+    if (proto == TCfgMgr::DNSUPDATE_ANY)
+        proto2 = DNSUpdate::DNSUPDATE_ANY;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     unsigned int timeout = SrvCfgMgr().getDDNSTimeout();
 
     if (FQDNMode == DNSUPDATE_MODE_PTR){
 	/* PTR cleanup */
 	Log(Notice) << "FQDN: Attempting to clean up PTR record in DNS Server " << * dns << ", IP = " << *clntAddr 
 		    << " and FQDN=" << fqdn->getName() << LogEnd;
+<<<<<<< HEAD
 	DNSUpdate *act = new DNSUpdate(dns->getPlain(), zoneroot, fqdnName, clntAddr->getPlain(), DNSUPDATE_PTR_CLEANUP);
+=======
+	DNSUpdate *act = new DNSUpdate(dns->getPlain(), zoneroot, fqdnName, clntAddr->getPlain(), 
+                                       DNSUPDATE_PTR_CLEANUP, proto2);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	result = act->run(timeout);
 	act->showResult(result);
 	delete act;
@@ -960,7 +1015,12 @@ void TSrvMsg::fqdnRelease(SPtr<TSrvCfgIface> ptrIface, SPtr<TAddrIA> ptrIA, SPtr
 	Log(Notice) << "FQDN: Attempting to clean up AAAA and PTR record in DNS Server " << * dns << ", IP = " 
 		    << *clntAddr << " and FQDN=" << fqdn->getName() << LogEnd;
 	
+<<<<<<< HEAD
 	DNSUpdate *act = new DNSUpdate(dns->getPlain(), "", fqdnName, clntAddr->getPlain(), DNSUPDATE_AAAA_CLEANUP);
+=======
+	DNSUpdate *act = new DNSUpdate(dns->getPlain(), "", fqdnName, clntAddr->getPlain(), 
+                                       DNSUPDATE_AAAA_CLEANUP, proto2);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	result = act->run(timeout);
 	act->showResult(result);
 	delete act;
@@ -968,7 +1028,12 @@ void TSrvMsg::fqdnRelease(SPtr<TSrvCfgIface> ptrIface, SPtr<TAddrIA> ptrIA, SPtr
 	/* PTR cleanup */
 	Log(Notice) << "FQDN: Attempting to clean up PTR record in DNS Server " << * dns << ", IP = " << *clntAddr 
 		    << " and FQDN=" << fqdn->getName() << LogEnd;
+<<<<<<< HEAD
 	DNSUpdate *act2 = new DNSUpdate(dns->getPlain(), zoneroot, fqdnName, clntAddr->getPlain(), DNSUPDATE_PTR_CLEANUP);
+=======
+	DNSUpdate *act2 = new DNSUpdate(dns->getPlain(), zoneroot, fqdnName, clntAddr->getPlain(), 
+                                        DNSUPDATE_PTR_CLEANUP, proto2);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	result = act2->run(timeout);
 	act2->showResult(result);
 	delete act2;

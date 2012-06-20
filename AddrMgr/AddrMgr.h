@@ -25,13 +25,36 @@ class TAddrMgr;
 #define ADDRDB_DTD (xmlChar*)"AddrMgr.dtd"
 #endif
 
+<<<<<<< HEAD
+=======
+///
+/// @brief Address Manager that holds address and prefix information.
+///
+/// This class holds information about assigned leases: addresses
+/// and prefixes with additional associated information: list of
+/// clients, listf of IAs, list of addresses, peer addresses,
+/// associated FQDN names, DNS addresses that performed DNS Update,
+/// t1,t2,prefered,valid lifetimes and similar data.
+///
+/// TAddrMgr is used by both server and client.
+///
+/// TAddrMgr has a container for TAddrClient - a list of clients.
+/// Each TAddrClient contains list of Identity Associations (IAs),
+/// represented by TAddrIA. Each TAddrIA contains list of addresses
+/// (TAddrAddr) or prefixes (TAddrPrefix).
+///
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 class TAddrMgr
 {
   public:
     friend ostream & operator<<(ostream & strum,TAddrMgr &x);
     TAddrMgr(string addrdb, bool loadfile = false);
     virtual ~TAddrMgr();
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     //--- Client container ---
     void addClient(SPtr<TAddrClient> x);
     void firstClient();
@@ -44,6 +67,7 @@ class TAddrMgr
 
     // --- prefix related ---
     virtual bool addPrefix(SPtr<TDUID> clntDuid, SPtr<TIPv6Addr> clntAddr,
+<<<<<<< HEAD
 			   int iface, unsigned long IAID, unsigned long T1, unsigned long T2, 
 			   SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
 			   int length, bool quiet);
@@ -53,6 +77,17 @@ class TAddrMgr
 			      int length, bool quiet);
 
     bool delPrefix(SPtr<TDUID> clntDuid, unsigned long IAID, SPtr<TIPv6Addr> prefix, bool quiet);
+=======
+                           int iface, unsigned long IAID, unsigned long T1, unsigned long T2,
+                           SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
+                           int length, bool quiet);
+    virtual bool updatePrefix(SPtr<TDUID> duid , SPtr<TIPv6Addr> addr,
+                              int iface, unsigned long IAID, unsigned long T1, unsigned long T2,
+                              SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
+                              int length, bool quiet);
+
+    virtual bool delPrefix(SPtr<TDUID> clntDuid, unsigned long IAID, SPtr<TIPv6Addr> prefix, bool quiet);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     bool prefixIsFree(SPtr<TIPv6Addr> prefix);
 
     //--- Time related methods ---
@@ -60,7 +95,11 @@ class TAddrMgr
     unsigned long getT2Timeout();
     unsigned long getPrefTimeout();
     unsigned long getValidTimeout();
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // --- backup/restore ---
     void dbLoad(const char * xmlFile);
     virtual void dump();
@@ -88,6 +127,7 @@ class TAddrMgr
 protected:
     virtual void print(ostream & out) = 0;
     bool addPrefix(SPtr<TAddrClient> client, SPtr<TDUID> duid , SPtr<TIPv6Addr> clntAddr,
+<<<<<<< HEAD
 		   int iface, unsigned long IAID, unsigned long T1, unsigned long T2, 
 		   SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
 		   int length, bool quiet);
@@ -95,6 +135,15 @@ protected:
 		      int iface, unsigned long IAID, unsigned long T1, unsigned long T2, 
 		      SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
 		      int length, bool quiet);
+=======
+                   int iface, unsigned long IAID, unsigned long T1, unsigned long T2,
+                   SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
+                   int length, bool quiet);
+    bool updatePrefix(SPtr<TAddrClient> client, SPtr<TDUID> duid , SPtr<TIPv6Addr> clntAddr,
+                      int iface, unsigned long IAID, unsigned long T1, unsigned long T2,
+                      SPtr<TIPv6Addr> prefix, unsigned long pref, unsigned long valid,
+                      int length, bool quiet);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     bool IsDone;
     List(TAddrClient) ClntsLst;

@@ -6,6 +6,7 @@
  *
  * released under GNU GPL v2 only licence
  *
+<<<<<<< HEAD
  * $Id: RelMsg.cpp,v 1.7 2009-03-24 01:18:11 thomson Exp $
  *
  */
@@ -21,6 +22,13 @@
 #include "RelMsg.h"
 
 // --- options ---
+=======
+ */
+
+#include "Portable.h"
+#include "Logger.h"
+#include "RelMsg.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "RelOptInterfaceID.h"
 #include "RelOptRelayMsg.h"
 #include "RelOptGeneric.h"
@@ -46,10 +54,17 @@ void TRelMsg::decodeOpts(char * buf, int bufSize) {
 		       << " bytes left to parse. Bytes ignored." << LogEnd;
 	    break;
 	}
+<<<<<<< HEAD
         unsigned short code   = ntohs( *((unsigned short*) (buf+pos)));
         pos+=2;
         unsigned short length = ntohs( *((unsigned short*) (buf+pos)));
         pos+=2;
+=======
+        unsigned short code   = readUint16(buf+pos);
+        pos += sizeof(uint16_t);
+        unsigned short length = readUint16(buf+pos);
+        pos += sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (pos+length>bufSize) {
 	    Log(Error) << "Invalid option (type=" << code << ", len=" << length 
 		       << " received (msgtype=" << MsgType << "). Message dropped." << LogEnd;

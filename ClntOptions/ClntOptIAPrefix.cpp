@@ -7,6 +7,7 @@
  *
  */
 
+<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -14,6 +15,9 @@
 #include <netinet/in.h>
 #endif 
 
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "DHCPConst.h"
 #include "Opt.h"
 #include "OptIAPrefix.h"
@@ -39,10 +43,17 @@ TClntOptIAPrefix::TClntOptIAPrefix( char * buf, int bufSize, TMsg* parent)
 		       << " bytes left to parse. Bytes ignored." << LogEnd;
 	    break;
 	}
+<<<<<<< HEAD
         unsigned short code   = ntohs( *((unsigned short*) (buf+pos)));
         pos+=2;
         unsigned short length = ntohs( *((unsigned short*) (buf+pos)));
         pos+=2;
+=======
+        unsigned short code   = readUint16(buf+pos);
+        pos += sizeof(uint16_t);
+        unsigned short length = readUint16(buf+pos);
+        pos+= sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (pos+length>bufSize) {
 	    Log(Error) << "Invalid option (type=" << code << ", len=" << length 
 		       << " received (msgtype=" << MsgType << "). Message dropped." << LogEnd;

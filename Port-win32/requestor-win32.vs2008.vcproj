@@ -406,6 +406,13 @@
 					RelativePath="..\Misc\Logger.cpp"
 					>
 				</File>
+<<<<<<< HEAD
+=======
+				<File
+					RelativePath="..\Misc\ScriptParams.cpp"
+					>
+				</File>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 			</Filter>
 			<Filter
 				Name="Messages"
@@ -435,9 +442,23 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
 					RelativePath="..\Options\OptInteger.cpp"
 					>
 				</File>
+=======
+					RelativePath="..\Options\OptIAPrefix.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Options\OptInteger.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Options\OptRtPrefix.cpp"
+					>
+				</File>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 			</Filter>
 			<Filter
 				Name="IfaceMgr"
@@ -516,6 +537,13 @@
 					RelativePath="..\Misc\Portable.h"
 					>
 				</File>
+<<<<<<< HEAD
+=======
+				<File
+					RelativePath="..\Misc\ScriptParams.h"
+					>
+				</File>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 			</Filter>
 			<Filter
 				Name="Messages"

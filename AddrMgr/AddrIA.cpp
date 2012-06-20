@@ -352,6 +352,17 @@ unsigned long TAddrIA::getValidTimeout() {
         if (ts > ptr->getValidTimeout()) 
             ts = ptr->getValidTimeout();
     }
+<<<<<<< HEAD
+=======
+
+    SPtr<TAddrPrefix> prefix;
+    firstPrefix();
+    while (prefix = getPrefix()) {
+      if (ts > prefix->getValidTimeout())
+          ts = prefix->getValidTimeout();
+    }
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return ts;
 }
 
@@ -594,6 +605,7 @@ ostream & operator<<(ostream & strum,TAddrIA &x) {
     }
 
     // FQDN
+<<<<<<< HEAD
     if (x.fqdnDnsServer) {
 	strum << "      <fqdnDnsServer>" << x.fqdnDnsServer->getPlain() << "</fqdnDnsServer>" << endl;
     } else {
@@ -603,6 +615,20 @@ ostream & operator<<(ostream & strum,TAddrIA &x) {
 	strum << "      " << *x.fqdn << endl;
     } else {
 	strum << "      <!-- <fqdn>-->" << endl;
+=======
+    if (x.Type!=TAddrIA::TYPE_PD) {
+        // it does not make sense to mention FQDN in PD
+        if (x.fqdnDnsServer) {
+            strum << "      <fqdnDnsServer>" << x.fqdnDnsServer->getPlain() << "</fqdnDnsServer>" << endl;
+        } else {
+            strum << "      <!--<fqdnDnsServer>-->" << endl;
+        }
+        if (x.fqdn) {
+            strum << "      " << *x.fqdn << endl;
+        } else {
+            strum << "      <!-- <fqdn>-->" << endl;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     strum << "    </" << name << ">" << dec << endl;

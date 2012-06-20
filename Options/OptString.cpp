@@ -6,7 +6,10 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: OptString.cpp,v 1.3 2007-08-26 10:26:19 thomson Exp $
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 #include <string.h>
@@ -33,10 +36,15 @@ TOptString::TOptString(int type, const char *buf, unsigned short bufsize, TMsg* 
 
 char * TOptString::storeSelf(char* buf)
 {
+<<<<<<< HEAD
     *(short*)buf = htons(OptType);
     buf+=2;
     *(short*)buf = htons(getSize()-4);
     buf+=2;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     memcpy(buf,Str.c_str(),Str.length());
     buf[Str.length()]=0;  // null-terminated
     return buf+this->Str.length()+1;

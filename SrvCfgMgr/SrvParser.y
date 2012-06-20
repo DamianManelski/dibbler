@@ -24,6 +24,10 @@
 #include "Logger.h"
 #include "FQDN.h"
 #include "OptVendorSpecInfo.h"
+<<<<<<< HEAD
+=======
+#include "OptRtPrefix.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "SrvOptAddrParams.h"
 #include "Portable.h"
 #include "SrvCfgClientClass.h"
@@ -72,13 +76,23 @@ bool EndTAClassDeclaration();                                                   
 void StartPDDeclaration();                                                           \
 bool EndPDDeclaration();                                                             \
 TSrvCfgMgr * CfgMgr;                                                                 \
+<<<<<<< HEAD
+=======
+SPtr<TOpt> nextHop;                                                                  \
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 virtual ~SrvParser();
 
 // constructor
 %define CONSTRUCTOR_PARAM yyFlexLexer * lex
 %define CONSTRUCTOR_CODE                                                          \
     ParserOptStack.append(new TSrvParsGlobalOpt());                               \
+<<<<<<< HEAD
     this->lex = lex;
+=======
+    this->lex = lex;                                                              \
+    CfgMgr = 0;                                                                   \
+    nextHop = 0;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 %union
 {
@@ -104,6 +118,10 @@ virtual ~SrvParser();
 %token STATELESS_
 %token CACHE_SIZE_
 %token PDCLASS_, PD_LENGTH_, PD_POOL_
+<<<<<<< HEAD
+=======
+%token SCRIPT_
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 %token VENDOR_SPEC_
 %token CLIENT_, DUID_KEYWORD_, REMOTE_ID_, ADDRESS_, GUESS_MODE_
 %token INACTIVE_MODE_
@@ -125,7 +143,11 @@ virtual ~SrvParser();
 %token DENY_
 %token SUBSTRING_, STRING_KEYWORD_, ADDRESS_LIST_
 %token CONTAIN_
+<<<<<<< HEAD
 
+=======
+%token NEXT_HOP_, ROUTE_, INFINITE_
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 %token <strval>     STRING_
 %token <ival>       HEXNUMBER_
@@ -169,8 +191,15 @@ GlobalOption
 | IfaceIDOrder
 | FqdnDdnsAddress
 | DdnsProtocol
+<<<<<<< HEAD
 | GuessMode
 | ClientClass
+=======
+| DdnsTimeout
+| GuessMode
+| ClientClass
+| ScriptName
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 ;
 
 
@@ -241,8 +270,17 @@ InterfaceDeclarationsList
 | InterfaceDeclarationsList InterfaceOptionDeclaration
 | ClassDeclaration
 | TAClassDeclaration
+<<<<<<< HEAD
 | InterfaceDeclarationsList TAClassDeclaration
 | InterfaceDeclarationsList ClassDeclaration
+=======
+| NextHopDeclaration
+| Route
+| InterfaceDeclarationsList TAClassDeclaration
+| InterfaceDeclarationsList ClassDeclaration
+| InterfaceDeclarationsList NextHopDeclaration
+| InterfaceDeclarationsList Route
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 ;
 
 Client
@@ -376,6 +414,67 @@ PDOptions
 | DenyClientClassDeclaration
 ;
 
+<<<<<<< HEAD
+=======
+////////////////////////////////////////////////////////////
+/// Route Option ///////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+NextHopDeclaration:
+NEXT_HOP_ IPV6ADDR_ '{'
+{
+    SPtr<TIPv6Addr> routerAddr = new TIPv6Addr($2);
+    SPtr<TOpt> myNextHop = new TOptAddr(OPTION_NEXT_HOP, routerAddr, NULL);
+    nextHop = myNextHop; 
+}
+RouteList '}'
+{
+    SrvCfgIfaceLst.getLast()->addExtraOption(nextHop, false);
+    nextHop = 0;
+    //should we call YYABORT;?
+}
+| NEXT_HOP_ IPV6ADDR_
+{
+    SPtr<TIPv6Addr> routerAddr = new TIPv6Addr($2);
+    SPtr<TOpt> myNextHop = new TOptAddr(OPTION_NEXT_HOP, routerAddr, NULL);
+    SrvCfgIfaceLst.getLast()->addExtraOption(myNextHop, false);
+}
+;
+
+RouteList
+: Route
+| RouteList Route
+;
+
+Route:
+ROUTE_ IPV6ADDR_ '/' INTNUMBER_ LIFETIME_ INTNUMBER_ 
+{
+    SPtr<TIPv6Addr> prefix = new TIPv6Addr($2);
+    SPtr<TOpt> rtPrefix = new TOptRtPrefix($6, $4, 42, prefix, NULL);
+    if (nextHop)
+        nextHop->addOption(rtPrefix);
+    else
+        SrvCfgIfaceLst.getLast()->addExtraOption(rtPrefix, false);
+}
+| ROUTE_ IPV6ADDR_ '/' INTNUMBER_
+{
+    SPtr<TIPv6Addr> prefix = new TIPv6Addr($2);
+    SPtr<TOpt> rtPrefix = new TOptRtPrefix(DHCPV6_INFINITY, $4, 42, prefix, NULL);
+    if (nextHop)
+        nextHop->addOption(rtPrefix);
+    else
+        SrvCfgIfaceLst.getLast()->addExtraOption(rtPrefix, false);
+}
+| ROUTE_ IPV6ADDR_ '/' INTNUMBER_ LIFETIME_ INFINITE_
+{
+    SPtr<TIPv6Addr> prefix = new TIPv6Addr($2);
+    SPtr<TOpt> rtPrefix = new TOptRtPrefix(DHCPV6_INFINITY, $4, 42, prefix, NULL);
+    if (nextHop)
+        nextHop->addOption(rtPrefix);
+    else
+        SrvCfgIfaceLst.getLast()->addExtraOption(rtPrefix, false);
+};
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 /////////////////////////////////////////////////////////////////////////////
 // Now Options and their parameters
@@ -890,6 +989,16 @@ GuessMode
     ParserOptStack.getLast()->setGuessMode(true);
 };
 
+<<<<<<< HEAD
+=======
+ScriptName
+: SCRIPT_ STRING_
+{
+    CfgMgr->setScriptName($2);
+};
+
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 InactiveMode
 : INACTIVE_MODE_
 {
@@ -1222,7 +1331,11 @@ FqdnDdnsAddress
 :FQDN_DDNS_ADDRESS_ IPV6ADDR_
 {
     addr = new TIPv6Addr($2);
+<<<<<<< HEAD
     CfgMgr->fqdnDdnsAddress( addr );
+=======
+    CfgMgr->setDDNSAddress(addr);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     Log(Info) << "FQDN: DDNS updates will be performed to " << addr->getPlain() << "." << LogEnd;
 };
 
@@ -1235,6 +1348,15 @@ DdnsProtocol
 	CfgMgr->setDDNSProtocol(TCfgMgr::DNSUPDATE_UDP);
     else if (!strcasecmp($2,"any"))
 	CfgMgr->setDDNSProtocol(TCfgMgr::DNSUPDATE_ANY);
+<<<<<<< HEAD
+=======
+    else {
+        Log(Crit) << "Invalid ddns-protocol specifed:" << ($2) 
+                  << ", supported values are tcp, udp, any." << LogEnd;
+        YYABORT;
+    }
+    Log(Debug) << "DDNS: Setting protocol to " << ($2) << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 };
 
 DdnsTimeout

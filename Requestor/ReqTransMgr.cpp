@@ -10,6 +10,10 @@
 
 #include <stdio.h>
 #include <sstream>
+<<<<<<< HEAD
+=======
+#include "SocketIPv6.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "ReqTransMgr.h"
 #include "ReqMsg.h"
 #include "OptAddr.h"
@@ -17,6 +21,10 @@
 #include "OptGeneric.h"
 #include "Logger.h"
 #include "ReqOpt.h"
+<<<<<<< HEAD
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 ReqTransMgr::ReqTransMgr(TIfaceMgr * ifaceMgr)
 {
@@ -55,7 +63,10 @@ bool ReqTransMgr::BindSockets()
 	    loopback = ptrIface;
 	    break;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     if (!loopback) {
 	   Log(Crit) << "Loopback interface not found!" << LogEnd;
 	   return false;
@@ -104,6 +115,7 @@ bool ReqTransMgr::BindSockets()
     }
     Log(Debug) << "Socket " << Socket->getFD() << " created on the " << Iface->getFullName() << " interface." << LogEnd;
 
+<<<<<<< HEAD
     return true;
 }
 
@@ -184,6 +196,9 @@ bool ReqTransMgr::BindTcpSockets()
     Log(Debug) << "Socket " << Socket->getFD() << " created on the " << Iface->getFullName() << " interface." << LogEnd;
     return true;
 
+=======
+    return true;    
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 bool ReqTransMgr::SendMsg()
@@ -219,6 +234,7 @@ bool ReqTransMgr::SendMsg()
         bufLen += optAddr->getSize();
         free(optAddr);
         
+<<<<<<< HEAD
     } else if (CfgMgr->duid) {
         Log(Debug) << "Creating DUID-based query. Asking for " << CfgMgr->duid << " DUID." << LogEnd;
         // DUID based query
@@ -304,6 +320,9 @@ bool ReqTransMgr::SendTcpMsg()
         free(optAddr);
 
     } else if (CfgMgr->duid) {
+=======
+    } else {
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         Log(Debug) << "Creating DUID-based query. Asking for " << CfgMgr->duid << " DUID." << LogEnd;
         // DUID based query
         buf[0] = QUERY_BY_CLIENTID;
@@ -315,6 +334,7 @@ bool ReqTransMgr::SendTcpMsg()
         TReqOptDUID * optDuid = new TReqOptDUID(OPTION_CLIENTID, duid, msg);
         optDuid->storeSelf(buf+bufLen);
         bufLen += optDuid->getSize();
+<<<<<<< HEAD
         free(optDuid);
 
     } else {
@@ -331,6 +351,10 @@ bool ReqTransMgr::SendTcpMsg()
         optAddr->storeSelf(buf+bufLen);
         bufLen += optAddr->getSize();
         free(optAddr);
+=======
+
+        free(optDuid);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     SPtr<TDUID> clientDuid = new TDUID("00:01:00:01:0e:ec:13:db:00:02:02:02:02:02");
@@ -339,7 +363,11 @@ bool ReqTransMgr::SendTcpMsg()
 
     opt = new TReqOptGeneric(OPTION_LQ_QUERY, buf, bufLen, msg);
     msg->addOption(opt);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     char msgbuf[1024];
     int  msgbufLen;
     memset(msgbuf, 0xff, 1024);
@@ -409,10 +437,17 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 		       << " bytes left to parse. Bytes ignored." << LogEnd;
 	    return false;
 	}
+<<<<<<< HEAD
 	unsigned short code = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
 	unsigned short length = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
+=======
+	unsigned short code = readUint16(buf+pos);
+	pos += sizeof(uint16_t);
+	unsigned short length = readUint16(buf+pos);
+	pos += sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (pos+length>bufLen) {
 	    Log(Error) << linePrefix << "Truncated option (type=" << code << ", len=" << length 
 		       << " received in message << " << msgType << ". Option ignored." << LogEnd;
@@ -470,7 +505,11 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 	case OPTION_CLT_TIME:
 	{
             name = "LQ Client Last Transmission Time";
+<<<<<<< HEAD
 	    unsigned int t = ntohl( *((unsigned int*)(buf+pos)));
+=======
+	    unsigned int t = readUint32(buf+pos);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    ostringstream out;
 	    out << t << " second(s)";
 	    o = out.str();
@@ -485,8 +524,13 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 	case OPTION_IAADDR:
 	{
 	    TIPv6Addr * addr = new TIPv6Addr(buf+pos, false);
+<<<<<<< HEAD
 	    unsigned int pref  = ntohl(*((long*)(buf+pos+16)));
 	    unsigned int valid = ntohl(*((long*)(buf+pos+20)));
+=======
+	    unsigned int pref  = readUint32(buf+pos+16);
+	    unsigned int valid = readUint32(buf+pos+20);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    name = "IAADDR";
 	    ostringstream out;
 	    out << "addr=" << addr->getPlain() << ", pref=" << pref << ", valid=" << valid;
@@ -520,6 +564,7 @@ string ReqTransMgr::BinToString(char * buf, int bufLen)
     return o.str();
 }
 
+<<<<<<< HEAD
 bool ReqTransMgr::RetryConnection()
 {
     if (ReqTransMgr::SendMsg()==false) {
@@ -528,3 +573,5 @@ bool ReqTransMgr::RetryConnection()
     }
 }
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d

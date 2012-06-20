@@ -14,12 +14,22 @@
 #define SRVTRANSMGR_H
 
 #include <string>
+<<<<<<< HEAD
 #include "SmartPtr.h"
 #include "Opt.h"
 #include "SrvMsg.h"
 #include "SrvMsgLeaseQuery.h"
 #include "SrvIfaceMgr.h"
 #include "SrvCfgMgr.h"
+=======
+#include <vector>
+#include "SmartPtr.h"
+#include "Container.h"
+#include "Opt.h"
+#include "SrvMsg.h"
+#include "SrvIfaceMgr.h"
+#include "SrvCfgIface.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "SrvAddrMgr.h"
 
 #define SrvTransMgr() (TSrvTransMgr::instance())
@@ -36,13 +46,26 @@ class TSrvTransMgr
 
     long getTimeout();
     void relayMsg(SPtr<TSrvMsg> msg);
+<<<<<<< HEAD
     void processLeaseQuery(SPtr<TSrvMsgLeaseQuery> lq);
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     void doDuties();
     void dump();
 
     bool isDone();
     void shutdown();
 
+<<<<<<< HEAD
+=======
+    void removeExpired(std::vector<TSrvAddrMgr::TExpiredInfo>& addrLst,
+                       std::vector<TSrvAddrMgr::TExpiredInfo>& tempAddrLst,
+                       std::vector<TSrvAddrMgr::TExpiredInfo>& prefixLst);
+
+    void notifyExpireInfo(TNotifyScriptParams& params, const TSrvAddrMgr::TExpiredInfo& exp,
+                          TAddrIA::TIAType type);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     char * getCtrlAddr();
     int    getCtrlIface();
 

@@ -6,8 +6,11 @@
  *
  * released under GNU GPL v2 only licence
  *
+<<<<<<< HEAD
  * $Id: IfaceMgr.h,v 1.9 2008-08-29 00:07:30 thomson Exp $
  *
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 class TIfaceMgr;
@@ -16,9 +19,18 @@ class TIfaceMgr;
 
 #include "SmartPtr.h"
 #include "Container.h"
+<<<<<<< HEAD
 
 #include "Iface.h"
 
+=======
+#include "ScriptParams.h"
+
+#include "Iface.h"
+
+class TMsg;
+class TOpt;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 class TIfaceMgr {
   public:
@@ -40,6 +52,7 @@ class TIfaceMgr {
     void dump();
     bool isDone();
 
+<<<<<<< HEAD
     ~TIfaceMgr();
 
  protected:
@@ -47,6 +60,20 @@ class TIfaceMgr {
 
     List(TIfaceIface) IfaceLst; //Interface list
 
+=======
+    void notifyScripts(std::string scriptName, SPtr<TMsg> question, SPtr<TMsg> answer);
+    void notifyScripts(std::string scriptName, SPtr<TMsg> question, SPtr<TMsg> answer,
+                       TNotifyScriptParams& params);
+    void notifyScript(std::string scriptName, std::string action, TNotifyScriptParams& params);
+
+    virtual ~TIfaceMgr();
+
+ protected:
+    virtual void optionToEnv(TNotifyScriptParams& params, SPtr<TOpt> opt, std::string txtPrefix );
+
+    string XmlFile;
+    List(TIfaceIface) IfaceLst; //Interface list
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     bool IsDone; 
 };
 

@@ -4,12 +4,18 @@
  * authors: Tomasz Mrugalski <thomson@klub.com.pl>
  *          Marek Senderski <msend@o2.pl>
  * changes: Michal Kowalczuk <michal@kowalczuk.eu>
+<<<<<<< HEAD
  *
+=======
+ *          Mateusz Ozga <matozga@gmail.com>
+ * 
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  * released under GNU GPL v2 only licence
  *
  * $Id: ClntMsg.cpp,v 1.42 2008-11-13 22:40:26 thomson Exp $
  */
 
+<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -21,6 +27,11 @@
 #include <cmath>
 #include <sstream>
 
+=======
+#include <cmath>
+#include <sstream>
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "ClntCfgMgr.h"
 
 #include "ClntMsg.h"
@@ -31,6 +42,10 @@
 #include "OptAddrLst.h"
 #include "OptAddr.h"
 #include "OptDUID.h"
+<<<<<<< HEAD
+=======
+#include "OptRtPrefix.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "ClntOptIA_NA.h"
 #include "ClntOptIA_PD.h"
 #include "ClntOptTA.h"
@@ -125,10 +140,17 @@ TClntMsg::TClntMsg(int iface, SPtr<TIPv6Addr> addr, char* buf, int bufSize)
 		       << " bytes left to parse. Bytes ignored." << LogEnd;
 	    break;
 	}
+<<<<<<< HEAD
 	unsigned short code   = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
 	unsigned short length = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
+=======
+	unsigned short code   = readUint16(buf+pos);
+	pos += sizeof(uint16_t);
+	unsigned short length = readUint16(buf+pos);
+	pos += sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	if (pos+length>bufSize) {
 	    Log(Error) << "Invalid option (type=" << code << ", len=" << length
 		       << " received (msgtype=" << MsgType << "). Message dropped." << LogEnd;
@@ -238,6 +260,17 @@ TClntMsg::TClntMsg(int iface, SPtr<TIPv6Addr> addr, char* buf, int bufSize)
 	    ptr = new TOptVendorSpecInfo(code, buf+pos, length, this);
 	    break;
 	}
+<<<<<<< HEAD
+=======
+        case OPTION_NEXT_HOP: {
+            ptr = new TOptAddr(code, buf+pos, length, this);
+            break;
+        }
+        case OPTION_RTPREFIX: {
+            ptr = new TOptRtPrefix(buf+pos, length, this);
+            break;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	case OPTION_RECONF_ACCEPT:
 	case OPTION_USER_CLASS:
 	case OPTION_VENDOR_CLASS:
@@ -682,6 +715,22 @@ void TClntMsg::appendRequestedOptions() {
 	}
     }
 
+<<<<<<< HEAD
+=======
+    // --- option: Routing ---
+    if ( (this->MsgType == SOLICIT_MSG || this->MsgType == REQUEST_MSG ||     
+         this->MsgType == RENEW_MSG || this->MsgType ==  REBIND_MSG ||
+         this->MsgType == INFORMATION_REQUEST_MSG) &&
+         iface->isRoutingEnabled() ) {
+
+        optORO->addOption(OPTION_NEXT_HOP);
+        optORO->addOption(OPTION_RTPREFIX);
+        
+        // only for debugging
+        Log(Debug) << "Adding NEXT_HOP and RTPREFIX to ORO." << LogEnd;
+    }
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // --- option: ADDRPARAMS ---
     SPtr<TClntCfgIA> ia;
     iface->firstIA();

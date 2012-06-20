@@ -9,6 +9,7 @@
  * $Id: OptTA.cpp,v 1.2 2006-03-05 21:37:46 thomson Exp $
  */
 
+<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -16,6 +17,9 @@
 #include <netinet/in.h>
 #endif 
 
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "OptTA.h"
 #include "OptIAAddress.h"
 #include "OptStatusCode.h"
@@ -37,8 +41,13 @@ TOptTA::TOptTA( char * &buf, int &bufsize, TMsg* parent)
         bufsize=0;
     } else {
         Valid=true;
+<<<<<<< HEAD
         this->IAID = ntohl(*( long*)buf);
         buf+=4; bufsize-=4;
+=======
+        this->IAID = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 }
 
@@ -60,6 +69,7 @@ int TOptTA::getSize() {
 }
 
 char * TOptTA::storeSelf( char* buf) {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
@@ -67,6 +77,11 @@ char * TOptTA::storeSelf( char* buf) {
     
     *(uint32_t*)buf = htonl(IAID);
     buf+=4;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+    buf = writeUint32(buf, IAID);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     buf=this->storeSubOpt(buf);
     return buf;
 }

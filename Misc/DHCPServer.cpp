@@ -6,14 +6,23 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: DHCPServer.cpp,v 1.30 2008-08-17 22:41:43 thomson Exp $
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 #include "DHCPServer.h"
 #include "AddrClient.h"
 #include "Logger.h"
+<<<<<<< HEAD
 
 
+=======
+#include "SrvIfaceMgr.h"
+#include "SrvCfgMgr.h"
+#include "SrvTransMgr.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 volatile int serviceShutdown;
 

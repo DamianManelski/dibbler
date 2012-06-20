@@ -6,6 +6,7 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: OptAAAAuthentication.cpp,v 1.2 2008-06-18 23:22:14 thomson Exp $
  *
  * $Log: not supported by cvs2svn $
@@ -22,6 +23,12 @@
 #include <netinet/in.h>
 #endif 
 #include <stdlib.h>
+=======
+ */
+
+#include <stdlib.h>
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "OptAAAAuthentication.h"
 #include "DHCPConst.h"
 #include "Portable.h"
@@ -44,10 +51,16 @@ TOptAAAAuthentication::TOptAAAAuthentication( char * &buf,  int &n, TMsg* parent
         n=0;
         return;
     }
+<<<<<<< HEAD
     this->setAAASPI(ntohl(*(uint32_t*)buf));
     this->Parent->setAAASPI(ntohl(*(uint32_t*)buf));
 
     buf +=4; n -=4;
+=======
+    this->setAAASPI(readUint32(buf));
+    this->Parent->setAAASPI(readUint32(buf));
+    buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     if (n != AAAAuthInfoLen)
     {
@@ -91,12 +104,18 @@ TOptAAAAuthentication::TOptAAAAuthentication(TMsg* parent)
 
  char * TOptAAAAuthentication::storeSelf( char* buf)
 {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons(getSize() - 4);
     buf+=2;
     *(uint32_t*)buf = htonl(AAASPI);
     buf+=4;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize() - 4);
+    buf = writeUint32(buf, AAASPI);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     memset(buf, 0, AAAAuthInfoLen);
 

@@ -4,6 +4,7 @@
  * author: Michal Kowalczuk <michal@kowalczuk.eu>
  *
  * released under GNU GPL v2 licence
+<<<<<<< HEAD
  *
  * $Id: OptAuthentication.cpp,v 1.6 2008-06-18 23:22:14 thomson Exp $
  *
@@ -34,6 +35,11 @@
 #ifdef LINUX
 #include <netinet/in.h>
 #endif 
+=======
+ */
+
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include <stdlib.h>
 #include "OptAuthentication.h"
 #include "DHCPConst.h"
@@ -59,11 +65,19 @@ TOptAuthentication::TOptAuthentication( char * &buf,  int &n, TMsg* parent)
     this->setRDM(*buf);
     buf +=1; n -=1;
 
+<<<<<<< HEAD
     this->Parent->setReplayDetection(ntohll(*(uint64_t*)buf));
     buf +=8; n -=8;
 
     this->Parent->setSPI(ntohl(*(uint32_t*)buf));
     buf +=4; n -=4;
+=======
+    this->Parent->setReplayDetection(readUint64(buf));
+    buf += sizeof(uint64_t); n -= sizeof(uint64_t);
+
+    this->Parent->setSPI(readUint32(buf));
+    buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     if (n != AuthInfoLen)
     {
@@ -105,6 +119,7 @@ TOptAuthentication::TOptAuthentication(TMsg* parent)
     uint32_t spi = this->Parent->getSPI();
     uint32_t aaaspi = this->Parent->getAAASPI();
 
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons(getSize() - 4);
@@ -115,6 +130,14 @@ TOptAuthentication::TOptAuthentication(TMsg* parent)
     buf+=8;
     *(uint32_t*)buf = htonl(spi);
     buf+=4;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize() - 4);
+    *buf = RDM;
+    buf+=1;
+    buf = writeUint64(buf, this->Parent->getReplayDetection());
+    buf = writeUint32(buf, spi);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     memset(buf, 0, AuthInfoLen);
 

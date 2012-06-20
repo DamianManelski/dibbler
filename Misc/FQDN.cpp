@@ -45,12 +45,21 @@ TFQDN::TFQDN(string name_,bool used_) {
     this->used = used_;
 }
 
+<<<<<<< HEAD
 TDUID TFQDN::getDuid() {
     return *this->Duid;
 }
 
 TIPv6Addr TFQDN::getAddr() {
     return *this->Addr;
+=======
+TDUID* TFQDN::getDuid() {
+    return this->Duid;
+}
+
+TIPv6Addr* TFQDN::getAddr() {
+    return this->Addr;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 string TFQDN::getName() {

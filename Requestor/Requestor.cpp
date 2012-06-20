@@ -30,7 +30,10 @@ void printHelp()
          << "-i IFACE - send query using iface inteface, e.g. -i eth0" << endl
          << "-addr ADDR - query about address, e.g. -addr 2000::43" << endl
          << "-duid DUID - query about DUID, e.g. -duid 00:11:22:33:44:55:66:77:88" << endl
+<<<<<<< HEAD
 	 << "-bulk ADDR - query about link-address, e.g. -bulk 2000::43" << endl
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
          << "-timeout 10 - query timeout, specified in seconds" << endl
 	 << "-dstaddr 2000::1 - destination address (by default it is ff02::1:2)" << endl;
 }
@@ -39,7 +42,10 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
 {
     char * addr    = 0;
     char * duid    = 0;
+<<<<<<< HEAD
     char * bulk    = 0;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     char * iface   = 0;
     char * dstaddr = 0;
     int timeout  = 60; // default timeout value
@@ -60,6 +66,7 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
             duid = argv[++i];
             continue;
         }
+<<<<<<< HEAD
         if (!strncmp(argv[i], "-bulk", 5)) {
             if (argc == i) {
                 Log(Error) << "Unable to parse command-line. -bulk used, but actual link-address is missing." << LogEnd;
@@ -68,6 +75,8 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
             bulk = argv[++i];
             continue;
         }
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         if (!strncmp(argv[i],"-i", 2)) {
             if (argc==i) {
                 Log(Error) << "Unable to parse command-line. -i used, but actual interface name is missing." << LogEnd;
@@ -100,7 +109,11 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
         Log(Error) << "Please use -h for help." << LogEnd;
         return false;
     }
+<<<<<<< HEAD
 /*
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     if (!addr && !duid) {
         Log(Error) << "Both address and DUID not defined." << LogEnd;
         return false;
@@ -109,7 +122,11 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
         Log(Error) << "Both address and DUID defined." << LogEnd;
         return false;
     }
+<<<<<<< HEAD
 */
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     if (!iface) {
         Log(Error) << "Interface not defined. Please use -i command-line switch." << LogEnd;
         return false;
@@ -117,7 +134,10 @@ bool parseCmdLine(ReqCfgMgr *a, int argc, char *argv[])
 
     a->addr  = addr;
     a->duid  = duid;
+<<<<<<< HEAD
     a->bulk  = bulk;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     a->iface = iface;
     a->timeout= timeout;
     a->dstaddr = dstaddr;

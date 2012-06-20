@@ -2,12 +2,17 @@
  * Dibbler - a portable DHCPv6
  *
  * author: Krzysztof Wnuk <keczi@poczta.onet.pl>
+<<<<<<< HEAD
+=======
+ * changes: Tomasz Mrugalski <thomson@klub.com.pl>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  * 
  * released under GNU GPL v2 only licence
  *
  *
  */
 
+<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -15,6 +20,9 @@
 #include <netinet/in.h>
 #endif 
 
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "OptIA_PD.h"
 #include "OptIAPrefix.h"
 #include "OptStatusCode.h"
@@ -47,10 +55,19 @@ TOptIA_PD::TOptIA_PD( char * &buf, int &bufsize, TMsg* parent)
 	
     } else {
         Valid=true;
+<<<<<<< HEAD
         IAID = ntohl(*( long*)buf);
         T1 = ntohl(*( long*)(buf+4));
         T2 = ntohl(*( long*)(buf+8));
         buf+=12; bufsize-=12;
+=======
+        IAID = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+        T1 = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+        T2 = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 }
 
@@ -74,6 +91,7 @@ int TOptIA_PD::getSize() {
 }
 
 char * TOptIA_PD::storeSelf( char* buf) {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
@@ -85,6 +103,16 @@ char * TOptIA_PD::storeSelf( char* buf) {
     *(uint32_t*)buf = htonl(T2);
     buf+=4;
     buf=this->storeSubOpt(buf);
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize() - 4 );
+
+    buf = writeUint32(buf, IAID);
+    buf = writeUint32(buf, T1);
+    buf = writeUint32(buf, T2);
+
+    buf = storeSubOpt(buf);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return buf;
 }
 

@@ -5,6 +5,10 @@
  *          Marek Senderski <msend@o2.pl>
  * changes: Krzysztof Wnuk <keczi@poczta.onet.pl>
  *          Michal Kowalczuk <michal@kowalczuk.eu>
+<<<<<<< HEAD
+=======
+ *          Mateusz Ozga <matozga@gmail.com>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  *
  * released under GNU GPL v2 only licence
  *
@@ -49,6 +53,10 @@ void TClntCfgIface::setDefaults() {
     LifetimeState   = STATE_DISABLED;
     PrefixDelegationState = STATE_DISABLED;
     VendorSpecState = STATE_DISABLED;
+<<<<<<< HEAD
+=======
+    RoutingEnabledState = STATE_DISABLED;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     ExtraOpts.clear();
 }
@@ -307,6 +315,12 @@ bool TClntCfgIface::isReqLifetime() {
 bool TClntCfgIface::isReqVendorSpec() {
     return this->ReqVendorSpec;
 }
+<<<<<<< HEAD
+=======
+bool TClntCfgIface::isRoutingEnabled() {
+    return this->RoutingEnabled;
+}
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 // --------------------------------------------------------------------------------
 // --- options: state -------------------------------------------------------------
@@ -357,6 +371,12 @@ EState TClntCfgIface::getKeyGenerationState() {
 EState TClntCfgIface::getAuthenticationState() {
     return AuthenticationState;
 }
+<<<<<<< HEAD
+=======
+EState TClntCfgIface::getRoutingEnabledState() {
+    return RoutingEnabledState;
+}
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 // --------------------------------------------------------------------
 // --- options: get option --------------------------------------------
 // --------------------------------------------------------------------
@@ -467,6 +487,12 @@ int  TClntCfgIface::getPrefixLength() {
     return this->PrefixLength;
 }
 
+<<<<<<< HEAD
+=======
+void TClntCfgIface::setRoutingEnabledState(EState state) {
+    this->RoutingEnabledState = state;
+}
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 /**
  * add extra option to the list of supported extra options
@@ -502,6 +528,13 @@ TClntCfgIface::TOptionStatusLst& TClntCfgIface::getExtraOptions() {
     return ExtraOpts;
 }
 
+<<<<<<< HEAD
+=======
+void TClntCfgIface::setRouting(bool enabled) {
+    RoutingEnabled = enabled;
+}
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 SPtr<TClntCfgIface::TOptionStatus> TClntCfgIface::getExtaOptionState(int type) {
     for (TOptionStatusLst::iterator opt=ExtraOpts.begin(); opt!=ExtraOpts.end(); ++opt)
 	if ((*opt)->OptionType == type)

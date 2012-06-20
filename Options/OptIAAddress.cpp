@@ -6,16 +6,23 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: OptIAAddress.cpp,v 1.7 2007-08-26 10:26:19 thomson Exp $
  *
  */
 
+=======
+ */
+
+//#include <netinet/in.h>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include <string.h>
 #include "Portable.h"
 #include "DHCPConst.h"
 #include "Opt.h"
 #include "OptIAAddress.h"
 
+<<<<<<< HEAD
 TOptIAAddress::TOptIAAddress( char * &buf, int &n, TMsg* parent)
 	:TOpt(OPTION_IAADDR, parent)
 {
@@ -29,6 +36,22 @@ TOptIAAddress::TOptIAAddress( char * &buf, int &n, TMsg* parent)
         this->Valid = ntohl(*((long*)buf));
         buf+= 4;  n-=4;    
         this->ValidOpt=true;
+=======
+TOptIAAddress::TOptIAAddress(char * &buf, int& n, TMsg* parent)
+	:TOpt(OPTION_IAADDR, parent)
+{
+    ValidOpt=false;
+    if (n>=24)
+    {
+        Addr = new TIPv6Addr(buf);
+        buf += 16; n -= 16;
+        Pref = readUint32(buf);
+        buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+        Valid = readUint32(buf);
+        buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+
+        ValidOpt=true;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 }
 
@@ -58,6 +81,7 @@ void TOptIAAddress::setValid(unsigned long valid) {
 
  char * TOptIAAddress::storeSelf( char* buf)
 {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
@@ -69,6 +93,21 @@ void TOptIAAddress::setValid(unsigned long valid) {
     *(uint32_t*)buf = htonl(Valid);
     buf+=4;
 	buf=storeSubOpt(buf);
+=======
+    buf = writeUint16(buf, OptType);
+
+    buf = writeUint16(buf, getSize() - 4 );
+
+    memcpy(buf,Addr->getAddr(),16);
+    buf+=16;
+
+    buf = writeUint32(buf, Pref);
+
+    buf = writeUint32(buf, Valid);
+
+    buf=storeSubOpt(buf);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return buf;
 }
 

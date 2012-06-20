@@ -34,6 +34,10 @@ public:
     int countAddr();
     bool isValid();
     virtual bool doDuties() { return true; } // does nothing on its own
+<<<<<<< HEAD
+=======
+    std::string getPlain();
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 protected:
     List(TIPv6Addr) AddrLst;
 };

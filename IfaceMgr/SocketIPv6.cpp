@@ -34,15 +34,24 @@ int TIfaceSocket::MaxFD=0;
  * @param reuse   should socket be bound with reuse flag in setsockopt()?
  */
 TIfaceSocket::TIfaceSocket(char * iface, int ifindex, int port,
+<<<<<<< HEAD
                    SPtr<TIPv6Addr> addr, bool ifaceonly, bool reuse) {
     if (this->Count==0) {
         FD_ZERO(getFDS());
+=======
+				   SPtr<TIPv6Addr> addr, bool ifaceonly, bool reuse) { 
+    if (this->Count==0) {
+	FD_ZERO(getFDS());
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     this->Count++;
     this->createSocket(iface, ifindex, addr, port, ifaceonly, reuse);
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 enum EState TIfaceSocket::getStatus() {
     return this->Status;
 }
@@ -58,7 +67,11 @@ enum EState TIfaceSocket::getStatus() {
  */
 TIfaceSocket::TIfaceSocket(char * iface,int ifaceid, int port,bool ifaceonly, bool reuse) {
     if (this->Count==0) {
+<<<<<<< HEAD
         FD_ZERO(getFDS());
+=======
+	FD_ZERO(getFDS());
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     // bind it to any address (::)
@@ -68,6 +81,7 @@ TIfaceSocket::TIfaceSocket(char * iface,int ifaceid, int port,bool ifaceonly, bo
     this->Count++;
 }
 
+<<<<<<< HEAD
 
 /**
  * creates TCP socket bound to specific address on this interface
@@ -88,6 +102,8 @@ TIfaceSocket::TIfaceSocket(char *iface, int ifaceid, int port, SPtr<TIPv6Addr> a
 }
 
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 /**
  * creates socket on this interface.
  * @param iface - interface name
@@ -99,8 +115,13 @@ TIfaceSocket::TIfaceSocket(char *iface, int ifaceid, int port, SPtr<TIPv6Addr> a
  *
  * @return negative error code (or 0 if everything is ok)
  */
+<<<<<<< HEAD
 int TIfaceSocket::createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr,  int port, bool ifaceonly, bool reuse) {
 
+=======
+int TIfaceSocket::createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr, 
+				   int port, bool ifaceonly, bool reuse) {
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     int sock;
 
     // store info about this socket 
@@ -122,9 +143,15 @@ int TIfaceSocket::createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr, 
 		    this->Port, ifaceonly?1:0, reuse?1:0);
 
     if (sock<0) {
+<<<<<<< HEAD
         printError(sock, iface, ifaceid, addr, port);
         this->Status = STATE_FAILED;
         return -3;
+=======
+	printError(sock, iface, ifaceid, addr, port);
+	this->Status = STATE_FAILED;
+	return -3;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     this->FD = sock;
@@ -138,6 +165,7 @@ int TIfaceSocket::createSocket(char * iface, int ifaceid, SPtr<TIPv6Addr> addr, 
     return 0;
 }
 
+<<<<<<< HEAD
 int TIfaceSocket::createTcpSocket(char *iface, int ifaceid, SPtr<TIPv6Addr> addr, int port, bool ifaceonly, bool reuse, bool sockType, int isMulticast)
 {
     int sock;
@@ -184,6 +212,8 @@ int TIfaceSocket::createTcpSocket(char *iface, int ifaceid, SPtr<TIPv6Addr> addr
     return 0;
 }
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 /**
  * sends data through socket
  * @param buf - buffer to send

@@ -241,7 +241,11 @@ int stop(const char * pidfile) {
 		return -1;
 	    }
 	    ptrace(PTRACE_CONT, pid, NULL,
+<<<<<<< HEAD
 		    WIFSTOPPED(p_status) ? WSTOPSIG(p_status) : NULL);
+=======
+		    WIFSTOPPED(p_status) ? WSTOPSIG(p_status) : 0);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	} while (! (WIFEXITED(p_status) || WIFSIGNALED(p_status)) );
 	cout << "Done." << endl;
     }

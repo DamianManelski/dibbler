@@ -15,6 +15,13 @@
 #include "DHCPConst.h"
 #include "Logger.h"
 
+<<<<<<< HEAD
+=======
+#if defined(LINUX) || defined(BSD)
+#include <arpa/inet.h>
+#endif
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 TOptVendorData::TOptVendorData(int type, char * buf,  int n, TMsg* parent)
     :TOpt(type, parent)
 {
@@ -26,9 +33,15 @@ TOptVendorData::TOptVendorData(int type, char * buf,  int n, TMsg* parent)
 	return;
     }
 
+<<<<<<< HEAD
     this->Vendor = ntohl(*(int*)buf); // enterprise number
     buf += 4;
     n   -= 4;
+=======
+    this->Vendor = readUint32(buf); // enterprise number
+    buf += sizeof(uint32_t);
+    n   -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     if (!n) {
 	this->VendorData = 0;
@@ -59,12 +72,18 @@ int TOptVendorData::getSize()
  */
 char * TOptVendorData::storeSelf( char* buf)
 {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
     buf+=2;
     *(uint32_t*)buf = htonl(this->Vendor);
     buf+=4;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+    buf = writeUint32(buf, this->Vendor);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     memmove(buf, this->VendorData, this->VendorDataLen);
     buf+=this->VendorDataLen;
     return buf;    

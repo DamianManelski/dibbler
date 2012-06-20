@@ -15,6 +15,10 @@
 #include "Portable.h"
 #include "OptFQDN.h"
 #include "Logger.h"
+<<<<<<< HEAD
+=======
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 TOptFQDN::TOptFQDN(string domain, TMsg* parent)
 		:TOpt(OPTION_FQDN, parent) {
@@ -115,10 +119,15 @@ int TOptFQDN::getSize() {
 
 char * TOptFQDN::storeSelf(char *buffer) {
 	// Type and size
+<<<<<<< HEAD
 	*(short*)buffer = htons(OptType);
 	buffer+=2;
 	*(short*)buffer = htons(getSize()-4);
 	buffer+=2;
+=======
+	buffer = writeUint16(buffer, OptType);
+	buffer = writeUint16(buffer, getSize()-4);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 //Flag Initialization
 	*buffer = 0;
 	if (flag_N) {

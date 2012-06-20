@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
+<<<<<<< HEAD
 	Version="9,00"
+=======
+	Version="9.00"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	Name="relay-win32"
 	ProjectGUID="{F3D13220-6D1A-43A5-B753-AA107DAC773D}"
 	Keyword="ManagedCProj"
@@ -382,6 +386,17 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Options\OptIAAddress.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Options\OptIAPrefix.cpp"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Options\OptInteger.cpp"
 					>
 				</File>
@@ -390,6 +405,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Options\OptRtPrefix.cpp"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Options\OptVendorData.cpp"
 					>
 				</File>
@@ -522,6 +544,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Misc\ScriptParams.cpp"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Misc\sha1.c"
 					>
 				</File>
@@ -687,6 +716,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Misc\ScriptParams.h"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\misc\SmartPtr.h"
 					>
 				</File>

@@ -42,6 +42,7 @@ char * TOptOptionRequest::storeSelf( char* buf)
 {
     if (!OptCnt) 
         return buf;
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
@@ -51,6 +52,14 @@ char * TOptOptionRequest::storeSelf( char* buf)
     {
         *(uint16_t*)buf = htons( Options[i] );
         buf+=2;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+    int i=0;
+    while(i<OptCnt)
+    {
+        buf = writeUint16(buf, Options[i]);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         i++;
     }
     return buf;
@@ -71,7 +80,11 @@ TOptOptionRequest::TOptOptionRequest( char * &buf,  int &bufSize, TMsg* parent)
     
     int i=0;
     for (i=0; i<totalOpts; i++) {
+<<<<<<< HEAD
         Options[i] = ntohs(*(unsigned short*) (buf+i*2) );
+=======
+        Options[i] = readUint16(buf+i*2);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     OptCnt = totalOpts;
     Valid = true;

@@ -324,6 +324,7 @@ extern int sock_add(char * ifacename,int ifaceid, char * addr, int port, int thi
     return s;
 }
 
+<<<<<<< HEAD
 extern int sock_add_tcp(char * ifacename,int ifaceid, char * addr, int port, int thisifaceonly, int reuse){
 
     SOCKET s;
@@ -433,16 +434,25 @@ extern int sock_send_tcp(int fd, char * addr, struct socketStruct,int flags ) {
 
 
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 int sock_del(int fd)
 {
 	return closesocket(fd);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 int sock_send(int fd, char * addr, char * buf, int buflen, int port,int iface)
 {	
     struct addrinfo inforemote,*remote;
 	char				addrStr[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")+5];
+<<<<<<< HEAD
     char				portStr[10];
+=======
+	char				portStr[10];
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	int i;
 	char				packaddr[16];
 	char				ifaceStr[10];
@@ -506,7 +516,11 @@ int sock_recv(int fd, char * myPlainAddr, char * peerPlainAddr, char * buf, int 
 #endif    	        
 		return	readBytes;
 	}
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 extern int dns_add(const char* ifname, int ifindex, const char* addrPlain) {
   // I think Windows NT/2000 does not support DNS over IPv6...

@@ -47,7 +47,12 @@ class TSrvOptIA_PD : public TOptIA_PD
     SPtr<TIPv6Addr>   ClntAddr;
     SPtr<TDUID>       ClntDuid;
     int                   Iface;
+<<<<<<< HEAD
     
+=======
+
+    bool existingLease();
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     int assignPrefix(SPtr<TIPv6Addr> hint, bool quiet);
     List(TIPv6Addr) getFreePrefixes(SPtr<TIPv6Addr> hint);
 

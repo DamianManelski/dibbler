@@ -16,6 +16,7 @@
 TOptIAPrefix::TOptIAPrefix( char * &buf, int &n, TMsg* parent)
 	:TOpt(OPTION_IAPREFIX, parent)
 {
+<<<<<<< HEAD
     	
 	this->ValidOpt=false;
     if (n>=25) // was 24 for IA address
@@ -32,6 +33,21 @@ TOptIAPrefix::TOptIAPrefix( char * &buf, int &n, TMsg* parent)
         this->ValidOpt=true;
 
 }
+=======
+    ValidOpt=false;
+    if (n>=25) // was 24 for IA address
+    {
+        Pref = readUint32(buf);
+        buf += sizeof(uint32_t);  n -= sizeof(uint32_t);
+        Valid = readUint32(buf);
+        buf += sizeof(uint32_t);  n -= sizeof(uint32_t);
+        PrefixLength  = *buf;// was ntohl(*((char*)buf));
+        buf+= 1;  n-=1;
+        Prefix=new TIPv6Addr(buf); // was buf
+        buf+= 16; n-=16;
+        ValidOpt=true;
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 TOptIAPrefix::TOptIAPrefix(SPtr<TIPv6Addr> prefix, char prefixLength, unsigned long pref, unsigned long valid,
@@ -64,6 +80,7 @@ void TOptIAPrefix::setPrefixLenght(char prefix_length){
 
 char * TOptIAPrefix::storeSelf( char* buf)
 {
+<<<<<<< HEAD
 	
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
@@ -73,6 +90,14 @@ char * TOptIAPrefix::storeSelf( char* buf)
     buf+=4;
     *(uint32_t*)buf = htonl(Valid);
     buf+=4;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+
+    buf = writeUint32(buf, Pref);
+    buf = writeUint32(buf, Valid);
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     *(char*)buf = PrefixLength;
     buf+=1;
     memcpy(buf,Prefix->getAddr(),16);

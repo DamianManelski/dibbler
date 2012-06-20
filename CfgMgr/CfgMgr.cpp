@@ -118,7 +118,20 @@ void TCfgMgr::copyFile(const string cfgFile, const string oldCfgFile)
 }
 
 
+<<<<<<< HEAD
 
+=======
+/**
+ * @brief loads DUID from a file.
+ *
+ * This function also checks if DUID value exist and checks the correctness of this file.
+ *
+ * @param duidFile string representation of the DUID file.
+ *
+ * @return true if DUID value exists and is correct, false if doesn't. 
+ *
+ */
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 bool TCfgMgr::loadDUID(const string duidFile)
 {
     ifstream f;
@@ -126,16 +139,35 @@ bool TCfgMgr::loadDUID(const string duidFile)
     if ( !(f.is_open())  ) {
         // unable to open DUID file
         Log(Notice) << "Unable to open DUID file (" << duidFile << "), generating new DUID." << LogEnd;
+<<<<<<< HEAD
 	return false;
+=======
+		return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     string s;
     getline(f,s);
     f.close();
 
+<<<<<<< HEAD
     this->DUID = new TDUID(s.c_str());
 
     return true;
+=======
+	this->DUID = new TDUID(s.c_str());
+	
+	Log(Debug) << "DUID's value = " << DUID->getPlain() << " was loaded from " << duidFile << " file." << LogEnd;
+   
+	int duidLen = s.length();
+    int duidLen2 = DUID->getLen();
+    if (duidLen <= 0 || duidLen2 == 0) {
+        Log(Error) << "DUID's value is 0. Please check that " << duidFile << " is not empty and contains actual DUID. You can also delete it." << LogEnd;
+        return false;
+	}
+
+	return true;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 bool TCfgMgr::setDUID(const string filename, TIfaceMgr & ifaceMgr) {
@@ -145,6 +177,10 @@ bool TCfgMgr::setDUID(const string filename, TIfaceMgr & ifaceMgr) {
         Log(Info) << "My DUID is " << this->DUID->getPlain() << "." << LogEnd;
         return true;
     }
+<<<<<<< HEAD
+=======
+	// Failed to load DUID. We need to generate it.
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     SPtr<TIfaceIface> realIface;
 
@@ -233,11 +269,19 @@ bool TCfgMgr::generateDUID(const string duidFile,char * mac,int macLen, int macT
         duidType = "link-local+time (duid-llt)";
         DUIDlen=macLen+8;
         DUID = new char[DUIDlen];
+<<<<<<< HEAD
         *((u_short*)DUID)=htons(this->DUIDType);
         *((u_short*)(DUID+2))=htons((short)macType);
         cur_time=now();
         
         *(((u_long*)(DUID+4)))=htonl((cur_time-946684800) & 0xFFFFFFFF);
+=======
+        writeUint16(DUID, this->DUIDType);
+        writeUint16(DUID+2, macType);
+        cur_time=now();
+
+        writeUint32(DUID+4, (cur_time-946684800) & 0xFFFFFFFF);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         /* 946684800=Number of seconds between midnight (UTC), January
            2000 and midnight (UTC), January 1970. It is 30 years.
            7 leap years of 366 days. 23 years of 365 days.
@@ -251,8 +295,13 @@ bool TCfgMgr::generateDUID(const string duidFile,char * mac,int macLen, int macT
         duidType= "link-local (duid-ll)";
         DUIDlen = macLen+4;
         DUID = new char[DUIDlen];
+<<<<<<< HEAD
         *((u_short*)DUID)=htons(this->DUIDType);
         *((u_short*)(DUID+2))=htons((short)macType);
+=======
+        writeUint16(DUID, this->DUIDType);
+        writeUint16(DUID+2, macType);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         for (int i=0;i<macLen; i++)
           DUID[i+4]=mac[i];
         break;
@@ -262,8 +311,13 @@ bool TCfgMgr::generateDUID(const string duidFile,char * mac,int macLen, int macT
         duidType="Enterprise Number (duid-en)";
         DUIDlen = 6 + DUIDEnterpriseID->getLen();
         DUID = new char[DUIDlen];
+<<<<<<< HEAD
         *((u_short*)DUID)=htons(this->DUIDType);
         *(((u_long*)(DUID+2)))=htonl(this->DUIDEnterpriseNumber);
+=======
+        writeUint16(DUID, this->DUIDType);
+        writeUint32(DUID+2, this->DUIDEnterpriseNumber);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         this->DUIDEnterpriseID->storeSelf(DUID+6);
         break;
       default:

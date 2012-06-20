@@ -29,10 +29,13 @@ public:
     int getPrefixLength();
     void setDigest(DigestTypes digest);
     DigestTypes getDigest();
+<<<<<<< HEAD
     void setScriptsDir(string dir);
     string getScriptsDir();
     void setNotifyScripts(bool useScripts);
     bool getNotifyScripts();
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     void setAnonInfRequest(bool anonymous);
     bool getAnonInfRequest();
     void setInsistMode(bool insist);
@@ -48,9 +51,12 @@ public:
     void setExperimental();
     bool getExperimental();
 
+<<<<<<< HEAD
     void setMappingPrefix(bool useMP);
     bool getMappingPrefix();
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     void setFQDNFlagS(bool s);
     bool getFQDNFlagS();
 
@@ -62,8 +68,11 @@ private:
     string WorkDir;
     int PrefixLength;
     DigestTypes Digest;
+<<<<<<< HEAD
     string ScriptsDir;
     bool   NotifyScripts;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     bool   AnonInfRequest;
     bool   InactiveMode;
     bool   InsistMode;
@@ -74,7 +83,10 @@ private:
     bool FQDNFlagS;
 
     bool Experimental;
+<<<<<<< HEAD
     bool ExperimentalMappingPrefix;
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 };
 
 #endif

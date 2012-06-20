@@ -7,8 +7,11 @@
  *
  * released under GNU GPL v2 only licence
  *
+<<<<<<< HEAD
  * $Header: /var/cvs/dibbler/SrvIfaceMgr/SrvIfaceMgr.h,v 1.11 2008-11-11 22:41:49 thomson Exp $
  *
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 #ifndef SRVIFACEMGR_H

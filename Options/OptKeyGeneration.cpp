@@ -6,6 +6,7 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: OptKeyGeneration.cpp,v 1.2 2008-06-18 23:22:14 thomson Exp $
  *
  */
@@ -16,6 +17,10 @@
 #ifdef LINUX
 #include <netinet/in.h>
 #endif 
+=======
+ */
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include <stdlib.h>
 #include "OptKeyGeneration.h"
 #include "DHCPConst.h"
@@ -36,6 +41,7 @@ TOptKeyGeneration::TOptKeyGeneration( char * &buf,  int &n, TMsg* parent)
         n=0;
         return;
     }
+<<<<<<< HEAD
     this->Parent->setSPI(ntohl(*(uint32_t*)buf));
     buf +=4; n -=4;
 
@@ -47,6 +53,19 @@ TOptKeyGeneration::TOptKeyGeneration( char * &buf,  int &n, TMsg* parent)
 
     this->setAlgorithmId(ntohs(*(uint16_t*)buf));
     buf +=2; n -=2;
+=======
+    this->Parent->setSPI(readUint32(buf));
+    buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+
+    this->setLifetime(readUint32(buf));
+    buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+
+    this->Parent->setAAASPI(readUint32(buf));
+    buf += sizeof(uint32_t); n -= sizeof(uint32_t);
+
+    this->setAlgorithmId(readUint16(buf));
+    buf += sizeof(uint16_t); n -= sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     this->Parent->setKeyGenNonce(buf, n);
 
@@ -85,6 +104,7 @@ TOptKeyGeneration::TOptKeyGeneration(TMsg* parent)
 
  char * TOptKeyGeneration::storeSelf( char* buf)
 {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons(getSize() - 4);
@@ -97,6 +117,14 @@ TOptKeyGeneration::TOptKeyGeneration(TMsg* parent)
     buf+=4;
     *(uint16_t*)buf = htons(AlgorithmId);
     buf+=2;
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize() - 4);
+    buf = writeUint32(buf, this->Parent->getSPI());
+    buf = writeUint32(buf, Lifetime);
+    buf = writeUint32(buf, this->Parent->getAAASPI());
+    buf = writeUint16(buf, AlgorithmId);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     Log(Debug) << "Auth:Key Generation Nonce length: " << this->Parent->getKeyGenNonceLen() << LogEnd;
     if (this->Parent->getKeyGenNonceLen()) {

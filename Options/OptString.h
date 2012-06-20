@@ -24,8 +24,14 @@ class TOptString : public TOpt
     int getSize();
     string getString();
     virtual bool doDuties() { return true; } // do nothing, actual code in ClntOpt* classes
+<<<<<<< HEAD
  protected:
     string Str;
+=======
+    std::string getPlain() { return Str; }
+ protected:
+    std::string Str;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 };
 
 #endif

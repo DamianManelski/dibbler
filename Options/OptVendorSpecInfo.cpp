@@ -19,6 +19,13 @@
 #include "DHCPConst.h"
 #include "Logger.h"
 
+<<<<<<< HEAD
+=======
+#if defined(LINUX) || defined(BSD)
+#include <arpa/inet.h>
+#endif
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* parent)
     :TOpt(type, parent)
 {
@@ -30,6 +37,7 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
 	return;
     }
 
+<<<<<<< HEAD
     this->Vendor = ntohl(*(int*)buf); // enterprise number
 
     buf += 4;
@@ -40,6 +48,17 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
         optionLen  =  ntohs(*(int*)(buf+2));
         buf += 4;
         n   -= 4;
+=======
+    this->Vendor = readUint32(buf); // enterprise number
+    buf += sizeof(uint32_t);
+    n   -= sizeof(uint32_t);
+
+    while (n>=4) {
+        optionCode = readUint16(buf);
+        buf += sizeof(uint16_t); n -= sizeof(uint16_t);
+        optionLen  =  readUint16(buf);
+        buf += sizeof(uint16_t); n -= sizeof(uint16_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         if (optionLen>n) {
             Log(Warning) << "Malformed vendor-spec info option. Suboption " << optionCode
                          << " truncated." << LogEnd;
@@ -90,6 +109,7 @@ int TOptVendorSpecInfo::getSize()
 
 char * TOptVendorSpecInfo::storeSelf( char* buf)
 {
+<<<<<<< HEAD
 	// option-code OPTION_VENDOR_OPTS (2 bytes long)
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
@@ -101,6 +121,16 @@ char * TOptVendorSpecInfo::storeSelf( char* buf)
     // enterprise-number (4 bytes long)
     *(uint32_t*)buf = htonl(this->Vendor);
     buf+=4;
+=======
+    // option-code OPTION_VENDOR_OPTS (2 bytes long)
+    buf = writeUint16(buf, OptType);
+
+    // option-len size of total option-data
+    buf = writeUint16(buf, getSize()-4);
+
+    // enterprise-number (4 bytes long)
+    buf = writeUint32(buf, this->Vendor);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     SPtr<TOpt> opt;
     firstOption();

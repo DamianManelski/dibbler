@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*
+=======
+/*
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  * Dibbler - a portable DHCPv6
  *
  * authors: Tomasz Mrugalski <thomson@klub.com.pl>
@@ -562,7 +566,13 @@ bool TClntTransMgr::handleResponse(SPtr<TClntMsg> question, SPtr<TClntMsg> answe
     question->answer(answer);
 
     // post-handling hooks can be added here
+<<<<<<< HEAD
     ClntIfaceMgr().notifyScripts(question, answer);
+=======
+    SPtr<TMsg> q = (Ptr*) question;
+    SPtr<TMsg> a = (Ptr*) answer;
+    ClntIfaceMgr().notifyScripts(ClntCfgMgr().getScript(), q, a);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     if ( (question->getType()==REQUEST_MSG || question->getType()==SOLICIT_MSG) &&
 	 (answer->getType()==REPLY_MSG) ) {

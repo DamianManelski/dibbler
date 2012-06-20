@@ -6,6 +6,7 @@
  *
  * released under GNU GPL v2 licence
  *
+<<<<<<< HEAD
  * $Id: OptIA_NA.cpp,v 1.8 2008-08-17 22:41:43 thomson Exp $
  *
  * $Log: not supported by cvs2svn $
@@ -33,6 +34,11 @@
 #include <netinet/in.h>
 #endif 
 
+=======
+ */
+
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "OptIA_NA.h"
 #include "OptIAAddress.h"
 #include "OptStatusCode.h"
@@ -72,10 +78,19 @@ TOptIA_NA::TOptIA_NA( char * &buf, int &bufsize, TMsg* parent)
         bufsize=0;
     } else {
         Valid=true;
+<<<<<<< HEAD
         IAID = ntohl(*( long*)buf);
         T1 = ntohl(*( long*)(buf+4));
         T2 = ntohl(*( long*)(buf+8));
         buf+=12; bufsize-=12;
+=======
+        IAID = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+        T1 = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+        T2 = readUint32(buf);
+        buf += sizeof(uint32_t); bufsize -= sizeof(uint32_t);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 }
 
@@ -99,6 +114,7 @@ int TOptIA_NA::getSize() {
 }
 
 char * TOptIA_NA::storeSelf( char* buf) {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
@@ -111,6 +127,16 @@ char * TOptIA_NA::storeSelf( char* buf) {
     *(uint32_t*)buf = htonl(T2);
     buf+=4;
     buf=this->storeSubOpt(buf);
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize() - 4 );
+
+    buf = writeUint32(buf, IAID);
+    buf = writeUint32(buf, T1);
+    buf = writeUint32(buf, T2);
+
+    buf = storeSubOpt(buf);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return buf;
 }
 

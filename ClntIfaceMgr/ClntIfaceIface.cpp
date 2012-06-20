@@ -525,7 +525,11 @@ void TClntIfaceIface::delString(const char * filename, const char * str) {
     FILE *f, *fout;
     char buf[512];
     char fileout[512];
+<<<<<<< HEAD
     sprintf(buf,"%s-old", filename);
+=======
+    snprintf(buf,511,"%s-old", filename);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     unsigned int len = (unsigned int)strlen(str);
     bool found = false;
 

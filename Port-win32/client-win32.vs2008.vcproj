@@ -45,7 +45,11 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
+<<<<<<< HEAD
 				AdditionalIncludeDirectories="..;.;include;..\poslib\poslib;..\Options;..\misc;..\Messages;..\IfaceMgr;..\ClntTransMgr;..\ClntParser;..\ClntOptions;..\ClntMessages;..\ClntIfaceMgr;..\ClntCfgMgr;..\ClntAddrMgr;..\CfgMgr;..\AddrMgr"
+=======
+				AdditionalIncludeDirectories="..;.;include;..\poslib;..\Options;..\misc;..\Messages;..\IfaceMgr;..\ClntTransMgr;..\ClntParser;..\ClntOptions;..\ClntMessages;..\ClntIfaceMgr;..\ClntCfgMgr;..\ClntAddrMgr;..\CfgMgr;..\AddrMgr"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;YYDEBUG; _WIN32"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -505,6 +509,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Options\OptRtPrefix.cpp"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Options\OptStatusCode.cpp"
 					>
 				</File>
@@ -1113,6 +1124,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Misc\ScriptParams.cpp"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Misc\sha1.c"
 					>
 				</File>
@@ -1149,6 +1167,7 @@
 				Name="poslib"
 				>
 				<File
+<<<<<<< HEAD
 					RelativePath="..\poslib\poslib\dnsmessage.cpp"
 					>
 				</File>
@@ -1190,6 +1209,45 @@
 				</File>
 				<File
 					RelativePath="..\poslib\poslib\w32poll.cpp"
+=======
+					RelativePath="..\poslib\dnsmessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\domainfn.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\exception.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\lexfn.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\postime.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\random.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\resolver.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\rr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\socket.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\poslib\w32poll.cpp"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					>
 				</File>
 			</Filter>
@@ -1638,6 +1696,13 @@
 					>
 				</File>
 				<File
+<<<<<<< HEAD
+=======
+					RelativePath="..\Misc\ScriptParams.h"
+					>
+				</File>
+				<File
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 					RelativePath="..\Misc\sha1.h"
 					>
 				</File>

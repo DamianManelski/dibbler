@@ -646,3 +646,14 @@ void link_state_change_cleanup()
 {
    /// @todo: implement this
 }
+<<<<<<< HEAD
+=======
+
+int execute(const char *filename, char * argv[], char *env[])
+{
+    intptr_t i;
+	i=_spawnvpe(_P_WAIT, filename, argv, env);
+
+	return i;
+}
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d

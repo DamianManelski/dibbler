@@ -19,7 +19,10 @@
 #define OPTSERVERUNICAST_H
 
 #include "Opt.h"
+<<<<<<< HEAD
 #include "DHCPConst.h"
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "SmartPtr.h"
 #include "IPv6Addr.h"
 
@@ -32,6 +35,10 @@ class TOptAddr : public TOpt
     char * storeSelf( char* buf);
     SPtr<TIPv6Addr> getAddr();
     virtual bool doDuties() { return true; } // does nothing on its own
+<<<<<<< HEAD
+=======
+    std::string getPlain();
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  protected:
     SPtr<TIPv6Addr> Addr;
 };

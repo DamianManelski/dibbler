@@ -9,8 +9,11 @@
  *
  * released under GNU GPL v2 only licence
  *
+<<<<<<< HEAD
  * $Id: AddrMgr.cpp,v 1.37 2008-08-29 00:07:26 thomson Exp $
  *
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 
 #include <stdlib.h>
@@ -54,6 +57,10 @@ TAddrMgr::TAddrMgr(string xmlFile, bool loadfile) {
  *  quite dumb and may be confused quite easily.
  *
  * @param xmlFile filename of the database
+<<<<<<< HEAD
+=======
+ * @param server is this server side (i.e. don't manipulate states)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  *
  */
 void TAddrMgr::dbLoad(const char * xmlFile)
@@ -311,6 +318,10 @@ bool TAddrMgr::addPrefix(SPtr<TAddrClient> client, SPtr<TDUID> duid , SPtr<TIPv6
     // have we found this PD?
     if (!ptrPD) {
 	ptrPD = new TAddrIA(iface, TAddrIA::TYPE_PD, addr, duid, T1, T2, IAID);
+<<<<<<< HEAD
+=======
+        ptrPD->setState(STATE_CONFIGURED);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	client->addPD(ptrPD);
 	if (!quiet)
 	    Log(Debug) << "PD: Adding PD (iaid=" << IAID << ") to addrDB." << LogEnd;
@@ -784,6 +795,10 @@ SPtr<TAddrClient> TAddrMgr::parseAddrClient(FILE *f)
     SPtr<TAddrIA> ia = 0;
     SPtr<TAddrIA> ptrpd=0;
     SPtr<TAddrIA> ta = 0;
+<<<<<<< HEAD
+=======
+    SPtr<TIPv6Addr> unicast;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     while (!feof(f)) {
     	fgets(buf,255,f);
@@ -816,9 +831,26 @@ SPtr<TAddrClient> TAddrMgr::parseAddrClient(FILE *f)
 		iface=atoi(x+7);
 		// Log(Debug) << "Parsed AddrIA::iface=" << iface << LogEnd;
 	    }
+<<<<<<< HEAD
 	    if (ia = parseAddrIA(f, t1, t2, iaid, iface)) {
 			clnt->addIA(ia);
 			Log(Debug) << "Parsed IA, iaid=" << iaid << LogEnd;
+=======
+            if ((x=strstr(buf,"unicast"))) {
+	        char *end = strstr(x+9, "\"");
+		string uni(x+9, end);
+                unicast = new TIPv6Addr(uni.c_str(), true);
+            }
+	    if (ia = parseAddrIA(f, t1, t2, iaid, iface)) {
+			clnt->addIA(ia);
+                        Log(Debug) << "Parsed IA, iaid=" << iaid;
+                        if (unicast) {
+                            ia->setUnicast(unicast);
+                            Log(Cont) << ", unicast=" << unicast->getPlain();
+			    unicast = 0;
+			}
+			Log(Cont) << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 			continue;
         }
 	}
@@ -912,7 +944,10 @@ SPtr<TAddrIA> TAddrMgr::parseAddrPD(FILE * f, int t1,int t2,int iaid,int iface) 
 		       << ", iaid=" << iaid << ", iface=" << iface << LogEnd;
 
 	    ptrpd = new TAddrIA(iface, TAddrIA::TYPE_PD, 0, duid, t1, t2, iaid);
+<<<<<<< HEAD
 	    ptrpd->setState(STATE_CONFIRMME);
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	    continue;
 	}
 	if (strstr(buf,"<AddrPrefix")) {
@@ -969,7 +1004,10 @@ SPtr<TAddrIA> TAddrMgr::parseAddrIA(FILE * f, int t1,int t2,int iaid,int iface)
 			     << ",iaid=" << iaid << ", iface=" << iface << LogEnd;
 
 	          ia = new TAddrIA(iface, TAddrIA::TYPE_IA, 0, duid, t1,t2, iaid);
+<<<<<<< HEAD
 	          ia->setState(STATE_CONFIRMME);
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 	          continue;
 	      }
 	      if (strstr(buf,"<AddrAddr")) {

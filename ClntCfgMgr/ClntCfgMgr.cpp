@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*                                                                           
  * Dibbler - a portable DHCPv6                                               
  *                                                                           
@@ -8,6 +9,18 @@
  * 
  * released under GNU GPL v2 only licence                                
  *                                                                           
+=======
+/*
+ * Dibbler - a portable DHCPv6
+ *
+ * authors: Tomasz Mrugalski <thomson@klub.com.pl>
+ *          Marek Senderski <msend@o2.pl>
+ * changes: Krzysztof Wnuk <keczi@poczta.onet.pl>
+ *          Michal Kowalczuk <michal@kowalczuk.eu>
+ *
+ * released under GNU GPL v2 only licence
+ *
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  * $Id: ClntCfgMgr.cpp,v 1.66 2008-09-22 17:08:52 thomson Exp $
  *
  */
@@ -55,21 +68,40 @@ void TClntCfgMgr::instanceCreate(const std::string cfgFile) {
 TClntCfgMgr::TClntCfgMgr(const string cfgFile)
   :TCfgMgr()
 {
+<<<<<<< HEAD
     NotifyScripts = false;
     RemoteAutoconf = false;
+=======
+    ScriptName = DEFAULT_SCRIPT;
+
+#ifdef MOD_REMOTE_AUTOCONF
+    RemoteAutoconf = false;
+#endif
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     Reconfigure = false;
 
     // parse configuration file
     if (!parseConfigFile(cfgFile)) {
         IsDone = true;
+<<<<<<< HEAD
 	    return;
     }
  
+=======
+            return;
+    }
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // load or create DUID
     string duidFile = (string)CLNTDUID_FILE;
     if (!setDUID(duidFile, ClntIfaceMgr())) {
         IsDone = true;
+<<<<<<< HEAD
  	    return;
+=======
+            return;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     this->dump();
 
@@ -95,8 +127,13 @@ bool TClntCfgMgr::parseConfigFile(string cfgFile)
     ifstream f;
     f.open(cfgFile.c_str());
     if ( ! f.is_open()  ) {
+<<<<<<< HEAD
         Log(Crit) << "Unable to open " << cfgFile << " file." << LogEnd; 
 	    return false;
+=======
+        Log(Crit) << "Unable to open " << cfgFile << " file." << LogEnd;
+            return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     } else {
         Log(Notice) << "Parsing " << cfgFile << " config file..." << LogEnd;
     }
@@ -108,7 +145,11 @@ bool TClntCfgMgr::parseConfigFile(string cfgFile)
     f.close();
 
     if (result) {
+<<<<<<< HEAD
         //Result!=0 means config errors. Finish whole DHCPClient 
+=======
+        //Result!=0 means config errors. Finish whole DHCPClient
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
         Log(Crit) << "Fatal error during config parsing." << LogEnd;
         this->DUID=new TDUID();
         return false;
@@ -131,7 +172,11 @@ bool TClntCfgMgr::parseConfigFile(string cfgFile)
     cfgMaker(this, cfgFile);
 
 #endif
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // check config consistency
     if(!validateConfig()) {
         return false;
@@ -140,6 +185,7 @@ bool TClntCfgMgr::parseConfigFile(string cfgFile)
     return true;
 }
 
+<<<<<<< HEAD
 /** 
  * match parsed interfaces with interfaces detected in system.  
  * ClntCfgIface objects copied to CfgMgr. 
@@ -147,6 +193,15 @@ bool TClntCfgMgr::parseConfigFile(string cfgFile)
  * @param parser 
  * 
  * @return 
+=======
+/**
+ * match parsed interfaces with interfaces detected in system.
+ * ClntCfgIface objects copied to CfgMgr.
+ *
+ * @param parser
+ *
+ * @return
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 bool TClntCfgMgr::matchParsedSystemInterfaces(ClntParser *parser) {
     int cfgIfaceCnt;
@@ -158,6 +213,7 @@ bool TClntCfgMgr::matchParsedSystemInterfaces(ClntParser *parser) {
     SPtr<TIfaceIface> ifaceIface;
 
     if (cfgIfaceCnt) {
+<<<<<<< HEAD
 	// user specified some interfaces in config file
 	parser->ClntCfgIfaceLst.first();
 	while(cfgIface = parser->ClntCfgIfaceLst.get()) {
@@ -310,6 +366,160 @@ bool TClntCfgMgr::matchParsedSystemInterfaces(ClntParser *parser) {
 		      << " want to have configured, please specify them in client.conf file." << LogEnd;
 	    return false;
 	}
+=======
+        // user specified some interfaces in config file
+        parser->ClntCfgIfaceLst.first();
+        while(cfgIface = parser->ClntCfgIfaceLst.get()) {
+            // for each interface (from config file)
+            if (cfgIface->getID()==-1) {
+                ifaceIface = ClntIfaceMgr().getIfaceByName(cfgIface->getName());
+            } else {
+                ifaceIface = ClntIfaceMgr().getIfaceByID(cfgIface->getID());
+            }
+
+            if (!ifaceIface) {
+                Log(Error) << "Interface " << cfgIface->getName() << "/" << cfgIface->getID()
+                           << " specified in " << CLNTCONF_FILE << " is not present or does not support IPv6."
+                           << LogEnd;
+                return false;
+            }
+            if (cfgIface->noConfig()) {
+                Log(Info) << "Interface " << cfgIface->getName() << "/" << cfgIface->getID()
+                               << " has flag no-config set, so it is ignored." << LogEnd;
+                continue;
+            }
+
+#ifdef MOD_REMOTE_AUTOCONF
+            if (RemoteAutoconf) {
+                List(TIPv6Addr) emptyLst;
+                SPtr<TOpt> optNeighbors = new TOptAddrLst(OPTION_NEIGHBORS, emptyLst, 0);
+                Log(Debug) << "Enabled Neighbors option on " << cfgIface->getFullName() << LogEnd;
+                cfgIface->addExtraOption(optNeighbors, false);
+            }
+#endif
+
+            cfgIface->setIfaceName(ifaceIface->getName());
+            cfgIface->setIfaceID(ifaceIface->getID());
+
+            // setup default prefix length (used when IPv6 address is added to the interface)
+            ifaceIface->setPrefixLength(cfgIface->getPrefixLength());
+
+            if (!ifaceIface->countLLAddress()) {
+                if (this->inactiveMode()) {
+                    Log(Notice) << "Interface " << ifaceIface->getFullName()
+                                << " is not operational yet (does not have "
+                                << "link-local address), skipping it for now." << LogEnd;
+                    addIface(cfgIface);
+                    makeInactiveIface(cfgIface->getID(), true); // move it to InactiveLst
+                    return true;
+                }
+
+                Log(Crit) << "Interface " << ifaceIface->getFullName()
+                          << " is down or doesn't have any link-local address." << LogEnd;
+                return false;
+            }
+
+            // Check if the interface is during bring-up phase
+            // (i.e. DAD procedure for link-local addr is not complete yet)
+            char tmp[64];
+            ifaceIface->firstLLAddress();
+            inet_ntop6(ifaceIface->getLLAddress(), tmp);
+            if (is_addr_tentative(ifaceIface->getName(), ifaceIface->getID(), tmp)
+                == LOWLEVEL_TENTATIVE_YES) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName()
+                            << " has link-local address " << tmp
+                            << ", but it is currently tentative." << LogEnd;
+
+                if (this->inactiveMode()) {
+                    Log(Notice) << "Interface " << ifaceIface->getFullName()
+                                << " is not operational yet (link-local address "
+                                << "is not ready), skipping it for now." << LogEnd;
+                    addIface(cfgIface);
+                    makeInactiveIface(cfgIface->getID(), true); // move it to InactiveLst
+                    return true;
+                }
+
+                Log(Crit) << "Interface " << ifaceIface->getFullName()
+                          << " has tentative link-local address (and inactive-mode is disabled)." << LogEnd;
+                return false;
+
+            }
+
+            this->addIface(cfgIface);
+            Log(Info) << "Interface " << cfgIface->getName() << "/" << cfgIface->getID()
+                                  << " configuation has been loaded." << LogEnd;
+        }
+    } else {
+        // user didn't specified any interfaces in config file, so
+        // we'll try to configure each interface we could find
+        Log(Warning) << "Config file does not contain any interface definitions. Trying to autodetect."
+                     << LogEnd;
+
+        List(TIPv6Addr) dnsList;
+        dnsList.clear();
+        parser->ParserOptStack.getLast()->setDNSServerLst(&dnsList);
+
+        int cnt = 0;
+        ClntIfaceMgr().firstIface();
+        while ( ifaceIface = ClntIfaceMgr().getIface() ) {
+            // for each interface present in the system...
+            if (!ifaceIface->flagUp()) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName() << " is down, ignoring." << LogEnd;
+                continue;
+            }
+            if (!ifaceIface->flagRunning()) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName()
+                            << " has flag RUNNING not set, ignoring." << LogEnd;
+                continue;
+            }
+            if (!ifaceIface->flagMulticast()) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName()
+                            << " is not multicast capable, ignoring." << LogEnd;
+                continue;
+            }
+            if ( !(ifaceIface->getMacLen() > 5) ) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName()
+                            << " has MAC address length " << ifaceIface->getMacLen()
+                            << " (6 or more required), ignoring." << LogEnd;
+                continue;
+            }
+            ifaceIface->firstLLAddress();
+            if (!ifaceIface->getLLAddress()) {
+                Log(Notice) << "Interface " << ifaceIface->getFullName()
+                            << " has no link-local address, ignoring. "
+                            << "(Disconnected? Not associated? No-link?)" << LogEnd;
+                continue;
+            }
+
+            // One address...
+            SPtr<TClntCfgAddr> addr(new TClntCfgAddr());
+            addr->setOptions(parser->ParserOptStack.getLast());
+
+            // ... is stored in one IA...
+            SPtr<TClntCfgIA> ia = new TClntCfgIA();
+            ia->setOptions(parser->ParserOptStack.getLast());
+            ia->addAddr(addr);
+
+            // ... on this newly created interface...
+            cfgIface = SPtr<TClntCfgIface>(new TClntCfgIface(ifaceIface->getID()));
+            cfgIface->setIfaceName(ifaceIface->getName());
+            cfgIface->setIfaceID(ifaceIface->getID());
+            cfgIface->addIA(ia);
+            cfgIface->setOptions(parser->ParserOptStack.getLast());
+
+            // ... which is added to ClntCfgMgr
+            this->addIface(cfgIface);
+
+            Log(Info) << "Interface " << cfgIface->getName() << "/" << cfgIface->getID()
+                      << " has been added." << LogEnd;
+            cnt ++;
+        }
+        if (!cnt) {
+            Log(Crit) << "Unable to detect any suitable interfaces. If there are any interfaces that you"
+                      << " want to have configured, please specify them in client.conf file." << LogEnd;
+            return false;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     return true;
 }
@@ -330,6 +540,7 @@ void TClntCfgMgr::makeInactiveIface(int ifindex, bool inactive)
 
     if (inactive)
     {
+<<<<<<< HEAD
 	ClntCfgIfaceLst.first();
 	while (x= ClntCfgIfaceLst.get()) {
 	    if (x->getID() == ifindex) {
@@ -342,10 +553,25 @@ void TClntCfgMgr::makeInactiveIface(int ifindex, bool inactive)
 	Log(Error) << "Unable to switch interface ifindex=" << ifindex 
 		   << " to inactive-mode: interface not found." << LogEnd;
 	return;
+=======
+        ClntCfgIfaceLst.first();
+        while (x= ClntCfgIfaceLst.get()) {
+            if (x->getID() == ifindex) {
+                Log(Info) << "Switching " << x->getFullName() << " to inactive-mode." << LogEnd;
+                ClntCfgIfaceLst.del();
+                InactiveLst.append(x);
+                return;
+            }
+        }
+        Log(Error) << "Unable to switch interface ifindex=" << ifindex
+                   << " to inactive-mode: interface not found." << LogEnd;
+        return;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     InactiveLst.first();
     while (x= InactiveLst.get()) {
+<<<<<<< HEAD
 	if (x->getID() == ifindex) {
 	    Log(Info) << "Switching " << x->getFullName() << " to normal mode." << LogEnd;
 	    InactiveLst.del();
@@ -357,6 +583,19 @@ void TClntCfgMgr::makeInactiveIface(int ifindex, bool inactive)
 
     Log(Error) << "Unable to switch interface ifindex=" << ifindex 
 	       << " from inactive-mode to normal operation: interface not found." << LogEnd;
+=======
+        if (x->getID() == ifindex) {
+            Log(Info) << "Switching " << x->getFullName() << " to normal mode." << LogEnd;
+            InactiveLst.del();
+            InactiveLst.first();
+            addIface(x);
+            return;
+        }
+    }
+
+    Log(Error) << "Unable to switch interface ifindex=" << ifindex
+               << " from inactive-mode to normal operation: interface not found." << LogEnd;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 void TClntCfgMgr::firstIface()
@@ -384,6 +623,7 @@ int TClntCfgMgr::countAddrForIA(long IAID)
 {
     SPtr<TClntCfgIface> iface;
     firstIface();
+<<<<<<< HEAD
     while (iface = getIface() ) 
     {
 	SPtr<TClntCfgIA> ia;
@@ -392,6 +632,16 @@ int TClntCfgMgr::countAddrForIA(long IAID)
 	    if (ia->getIAID()==IAID)
 		return ia->countAddr();
     }    
+=======
+    while (iface = getIface() )
+    {
+        SPtr<TClntCfgIA> ia;
+        iface->firstIA();
+        while (ia = iface->getIA())
+            if (ia->getIAID()==IAID)
+                return ia->countAddr();
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return 0;
 }
 
@@ -399,6 +649,7 @@ SPtr<TClntCfgIA> TClntCfgMgr::getIA(long IAID)
 {
     SPtr<TClntCfgIface> iface;
     firstIface();
+<<<<<<< HEAD
     while (iface = getIface() ) 
     {
 	SPtr<TClntCfgIA> ia;
@@ -407,6 +658,16 @@ SPtr<TClntCfgIA> TClntCfgMgr::getIA(long IAID)
 	    if (ia->getIAID()==IAID)
 		return ia;
     }        
+=======
+    while (iface = getIface() )
+    {
+        SPtr<TClntCfgIA> ia;
+        iface->firstIA();
+        while (ia = iface->getIA())
+            if (ia->getIAID()==IAID)
+                return ia;
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return 0;
 }
 
@@ -414,6 +675,7 @@ SPtr<TClntCfgPD> TClntCfgMgr::getPD(long IAID)
 {
     SPtr<TClntCfgIface> iface;
     firstIface();
+<<<<<<< HEAD
     while (iface = getIface() ) 
     {
 	SPtr<TClntCfgPD> pd;
@@ -422,6 +684,16 @@ SPtr<TClntCfgPD> TClntCfgMgr::getPD(long IAID)
 	    if (pd->getIAID()==IAID)
 		return pd;
     }        
+=======
+    while (iface = getIface() )
+    {
+        SPtr<TClntCfgPD> pd;
+        iface->firstPD();
+        while (pd = iface->getPD())
+            if (pd->getIAID()==IAID)
+                return pd;
+    }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return 0;
 }
 
@@ -433,7 +705,11 @@ bool TClntCfgMgr::setIAState(int iface, int iaid, enum EState state)
         if ( ptrIface->getID() == iface ) break;
     }
     if (! ptrIface) {
+<<<<<<< HEAD
 	Log(Error) <<"ClntCfgMgr: Unable to set IA state (id=" << iaid 
+=======
+        Log(Error) <<"ClntCfgMgr: Unable to set IA state (id=" << iaid
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
             << "):Interface " << iface << " not found." << LogEnd;
         return false;
     }
@@ -441,30 +717,54 @@ bool TClntCfgMgr::setIAState(int iface, int iaid, enum EState state)
     SPtr<TClntCfgIA> ia;
     ptrIface->firstIA();
 
+<<<<<<< HEAD
     while (ia = ptrIface->getIA()) 
     {
 	if ( ia->getIAID() == iaid ) {
 	    ia->setState(state);
 	    return true;
 	}
+=======
+    while (ia = ptrIface->getIA())
+    {
+        if ( ia->getIAID() == iaid ) {
+            ia->setState(state);
+            return true;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     Log(Error) << "ClntCfgMgr: Unable to set IA state (id=" << iaid << ")" << LogEnd;
     return false;
+<<<<<<< HEAD
 }	    
+=======
+}
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 //check whether T1<T2 and Pref<Valid and at least T1<=Valid
 bool TClntCfgMgr::validateConfig()
 {
+<<<<<<< HEAD
     if (IsDone) 
 		return false; //Is everything so far ok?
+=======
+    if (IsDone)
+                return false; //Is everything so far ok?
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TClntCfgIface> ptrIface;
     this->ClntCfgIfaceLst.first();
     while(ptrIface=ClntCfgIfaceLst.get())
     {
+<<<<<<< HEAD
 	if (!this->validateIface(ptrIface)) {
 	    return false;
 	}
+=======
+        if (!this->validateIface(ptrIface)) {
+            return false;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     return true;
 }
@@ -472,6 +772,7 @@ bool TClntCfgMgr::validateConfig()
 bool TClntCfgMgr::validateIface(SPtr<TClntCfgIface> ptrIface) {
 
     if(ptrIface->isReqTimezone()&&(ptrIface->getProposedTimezone()!=""))
+<<<<<<< HEAD
     {   
 	TTimeZone tmp(ptrIface->getProposedTimezone());
 	if(!tmp.isValid())
@@ -482,34 +783,65 @@ bool TClntCfgMgr::validateIface(SPtr<TClntCfgIface> ptrIface) {
 	}
     }
     
+=======
+    {
+        TTimeZone tmp(ptrIface->getProposedTimezone());
+        if(!tmp.isValid())
+        {
+            Log(Crit) << "Wrong time zone option for the " << ptrIface->getName()
+                      << "/" <<ptrIface->getID() << " interface." << LogEnd;
+            return false;
+        }
+    }
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TClntCfgIA> ptrIA;
     ptrIface->firstIA();
     while(ptrIA=ptrIface->getIA())
     {
+<<<<<<< HEAD
 	if (!this->validateIA(ptrIface, ptrIA)) 
 	    return false;
+=======
+        if (!this->validateIA(ptrIface, ptrIA))
+            return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     return true;
 }
 
 bool TClntCfgMgr::validateIA(SPtr<TClntCfgIface> ptrIface, SPtr<TClntCfgIA> ptrIA) {
 
+<<<<<<< HEAD
     if ( ptrIA->getT2()<ptrIA->getT1() ) 
     {
 	Log(Crit) << "T1 can't be lower than T2 for IA " << *ptrIA << "on the " << ptrIface->getName() 
 		  << "/" << ptrIface->getID() << " interface." << LogEnd;
 	return false;
+=======
+    if ( ptrIA->getT2()<ptrIA->getT1() )
+    {
+        Log(Crit) << "T1 can't be lower than T2 for IA " << *ptrIA << "on the " << ptrIface->getName()
+                  << "/" << ptrIface->getID() << " interface." << LogEnd;
+        return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     SPtr<TClntCfgAddr> ptrAddr;
     ptrIA->firstAddr();
     while(ptrAddr=ptrIA->getAddr())
     {
+<<<<<<< HEAD
 	if (!this->validateAddr(ptrIface, ptrIA, ptrAddr))
 	    return false;
+=======
+        if (!this->validateAddr(ptrIface, ptrIA, ptrAddr))
+            return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     return true;
 }
 
+<<<<<<< HEAD
 bool TClntCfgMgr::validateAddr(SPtr<TClntCfgIface> ptrIface, 
 			       SPtr<TClntCfgIA> ptrIA,
 			       SPtr<TClntCfgAddr> ptrAddr) {
@@ -533,6 +865,31 @@ bool TClntCfgMgr::validateAddr(SPtr<TClntCfgIface> ptrIface,
 	return false;
     }
     
+=======
+bool TClntCfgMgr::validateAddr(SPtr<TClntCfgIface> ptrIface,
+                               SPtr<TClntCfgIA> ptrIA,
+                               SPtr<TClntCfgAddr> ptrAddr) {
+    SPtr<TIPv6Addr> addr = ptrAddr->get();
+    if ( addr && addr->linkLocal()) {
+        Log(Crit) << "Address " << ptrAddr->get()->getPlain() << " specified in IA "
+                  << ptrIA->getIAID() << " on the " << ptrIface->getName() << "/" << ptrIface->getID()
+                  << " interface is link local." << LogEnd;
+        return false;
+    }
+    if( ptrAddr->getPref()>ptrAddr->getValid() ) {
+        Log(Crit) << "Prefered time " << ptrAddr->getPref() << " can't be lower than valid lifetime "
+                  << ptrAddr->getValid() << " for IA " << ptrIA->getIAID() << " on the "
+                  << ptrIface->getName() << "/" << ptrIface->getID() << " interface." << LogEnd;
+        return false;
+    }
+    if ((unsigned long)ptrIA->getT1()>(unsigned long)ptrAddr->getValid()) {
+        Log(Crit) << "Valid lifetime " << ptrAddr->getValid() << " can't be lower than T1 " <<ptrIA->getT1()
+                  << "(address can't be renewed) in IA " << ptrIA->getIAID() << " on the "
+                  << ptrIface->getName() << "/" << ptrIface->getName() << " interface." << LogEnd;
+        return false;
+    }
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     return true;
 }
 
@@ -551,11 +908,19 @@ SPtr<TClntCfgIface> TClntCfgMgr::getIfaceByIAID(int iaid)
     firstIface();
     while(iface=getIface())
     {
+<<<<<<< HEAD
 	SPtr<TClntCfgIA> ia;
 	iface->firstIA();
 	while(ia=iface->getIA())
 	    if (ia->getIAID()==iaid)
 		return iface;
+=======
+        SPtr<TClntCfgIA> ia;
+        iface->firstIA();
+        while(ia=iface->getIA())
+            if (ia->getIAID()==iaid)
+                return iface;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
     return SPtr<TClntCfgIface>();
 }
@@ -566,16 +931,24 @@ bool TClntCfgMgr::setGlobalOptions(ClntParser * parser)
     Digest         = opt->getDigest();
     LogLevel       = logger::getLogLevel();
     LogName        = logger::getLogName();
+<<<<<<< HEAD
     ScriptsDir     = opt->getScriptsDir();
     NotifyScripts  = opt->getNotifyScripts();
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     AnonInfRequest = opt->getAnonInfRequest();
     InsistMode     = opt->getInsistMode();   // should the client insist on receiving all options
                                                    // i.e. sending INF-REQUEST if REQUEST did not grant required opts
     InactiveMode   = opt->getInactiveMode(); // should the client accept not ready interfaces?
     FQDNFlagS      = opt->getFQDNFlagS();
+<<<<<<< HEAD
     MappingPrefix  = opt->getMappingPrefix(); // experimental feature
     UseConfirm     = opt->getConfirm(); // should client try to send CONFIRM?
     
+=======
+    UseConfirm     = opt->getConfirm(); // should client try to send CONFIRM?
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     // user has specified DUID type, just in case if new DUID will be generated
     if (parser->DUIDType != DUID_TYPE_NOT_DEFINED) {
       DUIDType = parser->DUIDType;
@@ -624,11 +997,14 @@ bool TClntCfgMgr::isDone() {
     return IsDone;
 }
 
+<<<<<<< HEAD
 string TClntCfgMgr::getScriptsDir()
 {
     return ScriptsDir;
 }
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 bool TClntCfgMgr::anonInfRequest()
 {
     return AnonInfRequest;
@@ -641,7 +1017,11 @@ bool TClntCfgMgr::inactiveMode()
 
 bool TClntCfgMgr::addInfRefreshTime()
 {
+<<<<<<< HEAD
     /* this can be considered a workaround, but for now ask for inf-refresh-time 
+=======
+    /* this can be considered a workaround, but for now ask for inf-refresh-time
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
        only when running in stateless mode */
 
     // are there any stateful interfaces?
@@ -649,7 +1029,11 @@ bool TClntCfgMgr::addInfRefreshTime()
     firstIface();
     while ( ptr = getIface() ) {
         if (!ptr->stateless())
+<<<<<<< HEAD
 	    return false;
+=======
+            return false;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     return true;
@@ -668,13 +1052,18 @@ int TClntCfgMgr::inactiveIfacesCnt()
 SPtr<TClntCfgIface> TClntCfgMgr::checkInactiveIfaces()
 {
     if (!InactiveLst.count())
+<<<<<<< HEAD
 	    return 0;
+=======
+            return 0;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
     ClntIfaceMgr().redetectIfaces();
     SPtr<TClntCfgIface> x;
     SPtr<TIfaceIface> iface;
     InactiveLst.first();
     while (x = InactiveLst.get()) {
+<<<<<<< HEAD
 	    iface = ClntIfaceMgr().getIfaceByID(x->getID());
         if (!iface) {
 	        Log(Error) << "Unable to find interface with ifindex=" << x->getID() << LogEnd;
@@ -696,6 +1085,29 @@ SPtr<TClntCfgIface> TClntCfgMgr::checkInactiveIfaces()
     	    makeInactiveIface(x->getID(), false); // move it to InactiveLst
     	    return x;
     	}
+=======
+            iface = ClntIfaceMgr().getIfaceByID(x->getID());
+        if (!iface) {
+                Log(Error) << "Unable to find interface with ifindex=" << x->getID() << LogEnd;
+                continue;
+            }
+            iface->firstLLAddress();
+        if (iface->flagUp() && iface->flagRunning() && iface->getLLAddress()) {
+            // check if its link-local address is not tentative
+            char tmp[64];
+            iface->firstLLAddress();
+            inet_ntop6(iface->getLLAddress(), tmp);
+            if (is_addr_tentative(iface->getName(), iface->getID(), tmp)==LOWLEVEL_TENTATIVE_YES) {
+                Log(Debug) << "Interface " << iface->getFullName()
+                           << " is up and running, but link-local address " << tmp
+                           << " is currently tentative." << LogEnd;
+                continue;
+            }
+
+            makeInactiveIface(x->getID(), false); // move it to InactiveLst
+            return x;
+        }
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     }
 
     return 0;
@@ -722,11 +1134,14 @@ bool TClntCfgMgr::getFQDNFlagS()
     return FQDNFlagS;
 }
 
+<<<<<<< HEAD
 bool TClntCfgMgr::getMappingPrefix()
 {
     return MappingPrefix;
 }
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 bool TClntCfgMgr::useConfirm()
 {
     return UseConfirm;
@@ -740,7 +1155,11 @@ ostream & operator<<(ostream &strum, TClntCfgMgr &x)
 {
     strum << "<ClntCfgMgr>" << endl;
     strum << "  <workdir>" << x.getWorkDir()  << "</workdir>" << endl;
+<<<<<<< HEAD
     strum << "  <scriptsDir>" << x.getScriptsDir() << "</scriptsDir>" << endl;
+=======
+    strum << "  <scriptName>" << x.getScript() << "</scriptName>" << endl;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     strum << "  <LogName>" << x.getLogName()  << "</LogName>" << endl;
     strum << "  <LogLevel>" << x.getLogLevel() << "</LogLevel>" << endl;
     strum << "  <AnonInfRequest>" << (x.anonInfRequest()?1:0) << "</AnonInfRequest>" << endl;
@@ -752,6 +1171,7 @@ ostream & operator<<(ostream &strum, TClntCfgMgr &x)
     switch (x.getDigest()) {
     case DIGEST_NONE:
         strum << "digest-none";
+<<<<<<< HEAD
 	    break;
     case DIGEST_HMAC_SHA1:
 	    strum << "digest-hmac-sha1";
@@ -759,6 +1179,15 @@ ostream & operator<<(ostream &strum, TClntCfgMgr &x)
     default:
     	strum << x.getDigest();
 	    break;
+=======
+            break;
+    case DIGEST_HMAC_SHA1:
+            strum << "digest-hmac-sha1";
+            break;
+    default:
+        strum << x.getDigest();
+            break;
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     };
     strum << "</digest>" << endl;
     if (x.DUID)
@@ -777,6 +1206,7 @@ ostream & operator<<(ostream &strum, TClntCfgMgr &x)
     return strum;
 }
 
+<<<<<<< HEAD
 bool TClntCfgMgr::getNotifyScripts()
 {
     return NotifyScripts;
@@ -790,13 +1220,27 @@ bool TClntCfgMgr::getNotifyScripts()
  * @param params 
  * 
  * @return 
+=======
+#ifdef MOD_CLNT_EMBEDDED_CFG
+/**
+ * this is example hardcoded configuration file
+ *
+ * @param cfgMgr
+ * @param params
+ *
+ * @return
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  */
 bool HardcodedCfgExample(TClntCfgMgr *cfgMgr, string params)
 {
     Log(Info) << "Using hardcoded config. file." << LogEnd;
 
     // there's no way to set some parameters directly, to fake ClntParsGlobalOpt
+<<<<<<< HEAD
     // must be created. 
+=======
+    // must be created.
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TClntParsGlobalOpt> opt = new TClntParsGlobalOpt();
 
     // Pretend to have parsed empty DNS list (i.e. request DNS server configuration, but don't
@@ -814,7 +1258,11 @@ bool HardcodedCfgExample(TClntCfgMgr *cfgMgr, string params)
     // set all "parsed" options on this interface
     iface->setOptions(opt);
 
+<<<<<<< HEAD
     // Create one IA 
+=======
+    // Create one IA
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TClntCfgIA> ia = new TClntCfgIA();
     ia->setIAID(123);
 

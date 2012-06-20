@@ -11,6 +11,7 @@
 #include <string>
 #include "ReqMsg.h"
 #include "DHCPConst.h"
+<<<<<<< HEAD
 #include "ReqTransMgr.h"
 
 using namespace std;
@@ -19,12 +20,25 @@ TReqMsg::TReqMsg(int iface, SPtr<TIPv6Addr> addr, int msgType, int msgSize)
     :TMsg(iface, addr, msgType)
 {
     this->setAttributes(iface,addr,msgSize,msgType,transID);
+=======
+
+using namespace std;
+
+TReqMsg::TReqMsg(int iface, SPtr<TIPv6Addr> addr, int msgType)
+    :TMsg(iface, addr, msgType)
+{
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
     // used to create TMsg object based on received char[] data
 TReqMsg::TReqMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize)
     :TMsg(iface, addr, buf, bufSize)
 {
+<<<<<<< HEAD
      this->setAttributes(iface,addr,msgSize,msgType,transID);
+=======
+
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 }
 
 
@@ -45,6 +59,7 @@ void TReqMsg::addOption(SPtr<TOpt> opt)
     Options.push_back(opt);
 }
 
+<<<<<<< HEAD
 void TReqMsg::setAttributes(int iface, SPtr<TIPv6Addr> addr, int msgSize, int msgType, long transID)
 {
     PeerAddr=addr;
@@ -83,3 +98,5 @@ void TReqMsg::multipleQuery()
 
 
 
+=======
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d

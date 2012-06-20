@@ -32,6 +32,10 @@ public:
     int getSize();
     unsigned int getValue();
     bool isValid();
+<<<<<<< HEAD
+=======
+    std::string getPlain();
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 protected:
     unsigned int Value;
     bool Valid;

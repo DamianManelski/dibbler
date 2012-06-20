@@ -11,6 +11,12 @@
  */
 
 #include <signal.h>
+<<<<<<< HEAD
+=======
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "DHCPServer.h"
 #include "Portable.h"
 #include "Logger.h"

@@ -14,6 +14,15 @@
 #include "SrvOptIAAddress.h"
 #include "SrvOptClientIdentifier.h"
 #include "Portable.h"
+<<<<<<< HEAD
+=======
+#ifdef WIN32
+#include <winsock2.h>
+#endif
+#if defined(LINUX) || defined(BSD)
+#include <netinet/in.h>
+#endif
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 // --- TSrvOptLQ ---
 TSrvOptLQ::TSrvOptLQ(char * buf, int bufsize, TMsg* parent)
@@ -112,11 +121,16 @@ int TSrvOptLQClientData::getSize()
 
 char* TSrvOptLQClientData::storeSelf(char* buf)
 {
+<<<<<<< HEAD
     *(uint16_t*)buf = htons(OptType);
     buf+=2;
     *(uint16_t*)buf = htons( getSize()-4 );
     buf+=2;
 
+=======
+    buf = writeUint16(buf, OptType);
+    buf = writeUint16(buf, getSize()-4);
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     buf = storeSubOpt(buf);
     return buf;
 }

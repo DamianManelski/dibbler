@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*                                                                           
  * Dibbler - a portable DHCPv6                                               
  *                                                                           
@@ -29,6 +30,19 @@
 #include <netinet/in.h>
 #endif 
 
+=======
+/*
+ * Dibbler - a portable DHCPv6
+ *
+ * authors: Tomasz Mrugalski <thomson@klub.com.pl>
+ *          Marek Senderski <msend@o2.pl>
+ *
+ * released under GNU GPL v2 only licence
+ *
+ */
+
+#include "Portable.h"
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "DHCPConst.h"
 #include "Opt.h"
 #include "OptIAAddress.h"
@@ -41,6 +55,7 @@ TSrvOptIAAddress::TSrvOptIAAddress( char * buf, int bufsize, TMsg* parent)
     :TOptIAAddress(buf,bufsize, parent)
 {
     int pos=0;
+<<<<<<< HEAD
     while(pos<bufsize) 
     {
         int code=buf[pos]*256+buf[pos+1]; /// @todo: use htons!
@@ -53,20 +68,42 @@ TSrvOptIAAddress::TSrvOptIAAddress( char * buf, int bufsize, TMsg* parent)
             {
                 SPtr<TOpt> opt;
 		opt = SPtr<TOpt>();
+=======
+    while(pos<bufsize)
+    {
+        uint16_t code = readUint16(buf+pos);
+        pos += sizeof(uint16_t);
+        uint16_t length = readUint16(buf+pos);
+        pos += sizeof(uint16_t);
+        if ((code>0)&&(code<=24))
+        {
+            if(allowOptInOpt(parent->getType(),OPTION_IAADDR,code))
+            {
+                SPtr<TOpt> opt;
+                opt = SPtr<TOpt>();
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
                 switch (code)
                 {
                 case OPTION_STATUS_CODE:
                     opt =(Ptr*)SPtr<TSrvOptStatusCode> (
+<<<<<<< HEAD
 			new TSrvOptStatusCode(buf+pos,length,this->Parent));
                     break;
                 default:
 		    Log(Warning) << "Option " << code<< " not supported "
+=======
+                        new TSrvOptStatusCode(buf+pos,length,this->Parent));
+                    break;
+                default:
+                    Log(Warning) << "Option " << code<< " not supported "
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
                         <<" in message (type="<< parent->getType() <<")." << LogEnd;
                     break;
                 }
                 if((opt)&&(opt->isValid()))
                     SubOptions.append(opt);
             } else {
+<<<<<<< HEAD
 		Log(Warning) << "Illegal option received, opttype=" << code 
 			     << " in field options of IA_NA option" << LogEnd;
 	    }
@@ -80,6 +117,21 @@ TSrvOptIAAddress::TSrvOptIAAddress( char * buf, int bufsize, TMsg* parent)
 
 TSrvOptIAAddress::TSrvOptIAAddress(SPtr<TIPv6Addr> addr, unsigned long pref, 
 				   unsigned long valid, TMsg* parent)
+=======
+                Log(Warning) << "Illegal option received, opttype=" << code
+                             << " in field options of IA_NA option" << LogEnd;
+            }
+        } else {
+            Log(Warning) <<"Unknown option in option IAADDR( optType="
+                 << code << "). Option ignored." << LogEnd;
+        };
+        pos += length;
+    }
+}
+
+TSrvOptIAAddress::TSrvOptIAAddress(SPtr<TIPv6Addr> addr, unsigned long pref,
+                                   unsigned long valid, TMsg* parent)
+>>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     :TOptIAAddress(addr,pref,valid, parent) {
 
 }
