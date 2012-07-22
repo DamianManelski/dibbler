@@ -34,15 +34,15 @@
 #define INFORMATION_REQUEST_MSG 11
 #define RELAY_FORW_MSG 12
 #define RELAY_REPL_MSG 13
-<<<<<<< HEAD
+
 #define LEASEQUERY_MSG 14
 #define LEASEQUERY_REPLY_MSG 15
 #define LEASEQUERY_DONE_MSG 16
 #define LEASEQUERY_DATA_MSG 17
-=======
+
 #define LEASEQUERY_MSG       14
 #define LEASEQUERY_REPLY_MSG 15
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 // implementation specific
 #define CONTROL_MSG    255
@@ -163,12 +163,10 @@
 // draft-ietf-softwire-ds-lite-tunnel-option-10, approved by IESG
 #define OPTION_AFTR_NAME        64
 
-<<<<<<< HEAD
 // RFC5460: Bulk Leasequer
 #define OPTION_RELAY_ID		53
 
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 // The following option numbers are not yet standardized and
 // won't interoperate with other implementations
 // option formats taken from:
@@ -176,12 +174,9 @@
 #define OPTION_AAAAUTH              240
 #define OPTION_KEYGEN               241
 
-<<<<<<< HEAD
-=======
+
 #define OPTION_NEXT_HOP         242
 #define OPTION_RTPREFIX         243
-
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 // Experimental implementation for address prefix length information
 // See: http://klub.com.pl/dhcpv6/doc/draft-mrugalski-addropts-XX-2007-04-17.txt
 #define OPTION_ADDRPARAMS           251
@@ -192,14 +187,13 @@
 // -- Query types (RFC5007) --
 typedef enum {
     QUERY_BY_ADDRESS = 1,
-<<<<<<< HEAD
+
     QUERY_BY_CLIENT_ID = 2,
     QUERY_BY_RELAY_ID = 3,
     QUERY_BY_LINK_ADDRESS = 4,
-    QUERY_BY_REMOTE_ID = 5
-=======
+    QUERY_BY_REMOTE_ID = 5,
     QUERY_BY_CLIENTID = 2
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 } ELeaseQueryType;
 
 // --- Option lengths --
@@ -220,11 +214,9 @@ typedef enum {
 #define STATUSCODE_MALFORMEDQUERY   8
 #define STATUSCODE_NOTCONFIGURED    9
 #define STATUSCODE_NOTALLOWED       10
-<<<<<<< HEAD
+
 // Bulk Leasequery status codes
 #define STATUSCODE_QUERYTERMINATED 11
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 
 // INFINITY + 1 is 0. That's cool!
 #define DHCPV6_INFINITY (unsigned) 0xffffffff

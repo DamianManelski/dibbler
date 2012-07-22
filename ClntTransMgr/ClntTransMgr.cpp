@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /*
-=======
-/*
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
  * Dibbler - a portable DHCPv6
  *
  * authors: Tomasz Mrugalski <thomson@klub.com.pl>
@@ -97,33 +93,33 @@ bool TClntTransMgr::populateAddrMgr(SPtr<TClntCfgIface> iface)
     SPtr<TClntCfgIA> ia;
     iface->firstIA();
     while(ia=iface->getIA()) {
-	if (ClntAddrMgr().getIA(ia->getIAID()))
-	    continue; // there is such IA already - read from disk cache (client-AddrMgr.xml)
-	SPtr<TAddrIA> addrIA = new TAddrIA(iface->getID(), TAddrIA::TYPE_IA,
-                                           0, 0, ia->getT1(), ia->getT2(),
-                                           ia->getIAID());
-        ClntAddrMgr().addIA(addrIA);
+        if (ClntAddrMgr().getIA(ia->getIAID()))
+            continue; // there is such IA already - read from disk cache (client-AddrMgr.xml)
+        SPtr<TAddrIA> addrIA = new TAddrIA(iface->getID(), TAddrIA::TYPE_IA,
+                                               0, 0, ia->getT1(), ia->getT2(),
+                                               ia->getIAID());
+            ClntAddrMgr().addIA(addrIA);
     }
 
     SPtr<TClntCfgTA> ta;
     iface->firstTA();
     if (ta = iface->getTA() &&  (!ClntAddrMgr().getTA(ta->getIAID())))
     {
-	// if there is such TA already, then skip adding it
-	SPtr<TAddrIA> addrTA = new TAddrIA(iface->getID(), TAddrIA::TYPE_TA,
-					   0, 0, DHCPV6_INFINITY, DHCPV6_INFINITY,
-					   ta->getIAID());
-	ClntAddrMgr().addTA(addrTA);
+        // if there is such TA already, then skip adding it
+        SPtr<TAddrIA> addrTA = new TAddrIA(iface->getID(), TAddrIA::TYPE_TA,
+                           0, 0, DHCPV6_INFINITY, DHCPV6_INFINITY,
+                           ta->getIAID());
+        ClntAddrMgr().addTA(addrTA);
     }
     SPtr<TClntCfgPD> pd;
     iface->firstPD();
     while (pd = iface->getPD()) {
-	if (ClntAddrMgr().getPD(pd->getIAID()))
-	    continue; // there is such IA already - read from disk cache (client-AddrMgr.xml)
-	SPtr<TAddrIA> addrPD = new TAddrIA(iface->getID(), TAddrIA::TYPE_PD,
-					   0, 0, pd->getT1(), pd->getT2(),
-					   pd->getIAID());
-	ClntAddrMgr().addPD(addrPD);
+        if (ClntAddrMgr().getPD(pd->getIAID()))
+            continue; // there is such IA already - read from disk cache (client-AddrMgr.xml)
+        SPtr<TAddrIA> addrPD = new TAddrIA(iface->getID(), TAddrIA::TYPE_PD,
+                           0, 0, pd->getT1(), pd->getT2(),
+                           pd->getIAID());
+        ClntAddrMgr().addPD(addrPD);
     }
 
     return true;
@@ -521,19 +517,19 @@ void TClntTransMgr::relayMsg(SPtr<TClntMsg> msgAnswer)
     while(msgQuestion=(Ptr*)Transactions.get()) {
         if (msgQuestion->getTransID()==msgAnswer->getTransID()) {
             found =true;
-	    if (msgQuestion->getIface()!=msgAnswer->getIface()) {
-		ifaceQuestion = ClntIfaceMgr().getIfaceByID(msgQuestion->getIface());
-		ifaceAnswer   = ClntIfaceMgr().getIfaceByID(msgAnswer->getIface());
-		Log(Warning) << "Reply for transaction 0x" << hex << msgQuestion->getTransID() << dec
-			     << " sent on " << ifaceQuestion->getFullName() << " was received on interface " 
-			     << ifaceAnswer->getFullName() << "." << LogEnd;
-		// return; // don't return, just fix interface ID
-		// useful, when sending thru eth0, but receiving via loopback
-		msgAnswer->setIface(msgQuestion->getIface());
-	    }
+            if (msgQuestion->getIface()!=msgAnswer->getIface()) {
+            ifaceQuestion = ClntIfaceMgr().getIfaceByID(msgQuestion->getIface());
+            ifaceAnswer   = ClntIfaceMgr().getIfaceByID(msgAnswer->getIface());
+            Log(Warning) << "Reply for transaction 0x" << hex << msgQuestion->getTransID() << dec
+                     << " sent on " << ifaceQuestion->getFullName() << " was received on interface "
+                     << ifaceAnswer->getFullName() << "." << LogEnd;
+            // return; // don't return, just fix interface ID
+            // useful, when sending thru eth0, but receiving via loopback
+            msgAnswer->setIface(msgQuestion->getIface());
+            }
 
-	    handleResponse(msgQuestion, msgAnswer);
-	    break;
+            handleResponse(msgQuestion, msgAnswer);
+            break;
         }
     }
 
@@ -566,13 +562,13 @@ bool TClntTransMgr::handleResponse(SPtr<TClntMsg> question, SPtr<TClntMsg> answe
     question->answer(answer);
 
     // post-handling hooks can be added here
-<<<<<<< HEAD
+
     ClntIfaceMgr().notifyScripts(question, answer);
-=======
+
     SPtr<TMsg> q = (Ptr*) question;
     SPtr<TMsg> a = (Ptr*) answer;
     ClntIfaceMgr().notifyScripts(ClntCfgMgr().getScript(), q, a);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
     if ( (question->getType()==REQUEST_MSG || question->getType()==SOLICIT_MSG) &&
 	 (answer->getType()==REPLY_MSG) ) {

@@ -13,29 +13,24 @@
 
 #include "IfaceMgr.h"
 #include "ReqCfgMgr.h"
-<<<<<<< HEAD
+#include "RelOptRemoteID.h"
 #include "SocketIPv6.h"
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 class ReqTransMgr {
 public:
     ReqTransMgr(TIfaceMgr * ifaceMgr);
     void SetParams(ReqCfgMgr * cfgMgr);
     bool BindSockets();
-<<<<<<< HEAD
+
     bool BindTcpSockets();
     bool SendMsg();
     bool SendTcpMsg();
     bool WaitForRsp();
     bool RetryConnection(); //if server doesn't answer retry attemption
-    void Terminate();
-    void sendTcp();
+    void TerminateTcpConn();
 
-=======
-    bool SendMsg();
-    bool WaitForRsp();
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 private:
     void PrintRsp(char * buf, int bufLen);
@@ -47,10 +42,4 @@ private:
     SPtr<TIfaceSocket> Socket;
 };
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #endif

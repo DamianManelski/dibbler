@@ -21,10 +21,8 @@ class TMsg;
 #include "IPv6Addr.h"
 #include "Opt.h"
 #include "KeyList.h"
-<<<<<<< HEAD
-=======
 #include "ScriptParams.h"
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 // Hey! It's grampa of all messages
 class TMsg
@@ -33,6 +31,7 @@ class TMsg
     // Used to create TMsg object (normal way)
     TMsg(int iface, SPtr<TIPv6Addr> addr, int msgType);
     TMsg(int iface, SPtr<TIPv6Addr> addr, int msgType, long transID);
+    TMsg(int iface, SPtr<TIPv6Addr> addr,int msgSize, int msgType, long transID);
 
     // used to create TMsg object based on received char[] data
     TMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize);
@@ -82,26 +81,26 @@ class TMsg
     enum DigestTypes DigestType;
     SPtr<KeyList> AuthKeys;
 
-<<<<<<< HEAD
+
   protected:
     int MsgType;
     long TransID;
     int messageSize;
-=======
+
     // notify scripts stuff
     void* getNotifyScriptParams() { return NotifyScripts; }
 
   protected:
     int MsgType;
     long TransID;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
     bool delOption(int code);
 
     TOptList Options;
     TOptList::iterator NextOpt; // to be removed together with firstOption() and getOption();
-    void setAttribs(int iface, SPtr<TIPv6Addr> addr, 
-		    int msgType, long transID);
+    void setAttribs(int iface, SPtr<TIPv6Addr> addr, int msgType, long transID);
+    void setAttribsForTcpMsg(int iface, SPtr<TIPv6Addr> addr, int msgSize, int msgType, long transID);
     virtual bool check(bool clntIDmandatory, bool srvIDmandatory);
     
     bool IsDone; // Is this transaction done?
@@ -117,12 +116,11 @@ class TMsg
     uint32_t AAASPI; // AAA-SPI sent by client in OPTION_AAAAUTH
     char *KeyGenNonce;
     unsigned KeyGenNonceLen;
-<<<<<<< HEAD
-=======
+
 
     // a pointer to NotifyScriptParams structure (if defined)
     TNotifyScriptParams * NotifyScripts;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 };
 
 typedef std::list< SPtr<TMsg> > TMsgLst;

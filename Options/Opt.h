@@ -12,11 +12,8 @@
 
 #ifndef OPT_H
 #define OPT_H
-
-<<<<<<< HEAD
-=======
 #include <stdint.h>
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 #include <list>
 #include "SmartPtr.h"
 #include "Container.h"
@@ -50,11 +47,11 @@ class TOpt
      *  - Option size
      *  - data
      *
-<<<<<<< HEAD
+
      * @return the size, I've already said that !
-=======
+
      * @return the size
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
      */
     virtual int getSize() = 0;
 
@@ -78,13 +75,11 @@ class TOpt
     virtual std::string getPlain();
 
     int getOptType();
-<<<<<<< HEAD
+
     int getSubOptSize();
 
     char* storeSubOpt(char* buf);
-=======
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     SPtr<TOpt> getOption(int optType);
 
     // suboptions management
@@ -99,9 +94,9 @@ class TOpt
     SPtr<TDUID> getDUID();
     void setDUID(SPtr<TDUID> duid);
 
-<<<<<<< HEAD
+
  protected:
-=======
+
     static bool parseOptions(TContainer< SPtr<TOpt> >& options,
                              const char* buf,
                              size_t len,
@@ -115,7 +110,7 @@ class TOpt
     char* storeSubOpt(char* buf);
     int getSubOptSize();
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     TContainer< SPtr<TOpt> > SubOptions;
     int OptType;
     TMsg* Parent;

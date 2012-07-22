@@ -28,7 +28,7 @@
 #include <process.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/stat.h>
+#include <sys/stat.>
 #include <fcntl.h>
 
 
@@ -324,7 +324,7 @@ extern int sock_add(char * ifacename,int ifaceid, char * addr, int port, int thi
     return s;
 }
 
-<<<<<<< HEAD
+
 extern int sock_add_tcp(char * ifacename,int ifaceid, char * addr, int port, int thisifaceonly, int reuse){
 
     SOCKET s;
@@ -342,8 +342,6 @@ extern int sock_add_tcp(char * ifacename,int ifaceid, char * addr, int port, int
     bindme.sin6_family   = AF_INET6;
     bindme.sin6_port     = htons(port);
 
-    if (IN6_IS_ADDR_LINKLOCAL((IN6_ADDR*)packedAddr))
-    bindme.sin6_scope_id = ifaceid;
 
     /*(if (!IN6_IS_ADDR_MULTICAST((IN6_ADDR*)packedAddr)) 	{
         inet_pton6(addr, (char*)&bindme.sin6_addr);
@@ -423,36 +421,85 @@ extern int getPeerName_ipv6(int fd,struct socketStruct,char * addr) {
 
 }
 
-extern int sock_recv_tcp(int fd, char * buffer,struct socketStruct, int bufLength, int flags) {
-    recv();
+extern int sock_recv_tcp(int fd, char * recvBuffer, int bufLength, int flags) {
+
+    //int sock_recv(int fd, char * myPlainAddr, char * peerPlainAddr, char * buf, int buflen)
+
+    int iResult;
+
+    if (!(iResult = recv (fd, recvBuffer, bufLength, flags))) {
+        return -1;
+    } else if(iResult < 0)  {
+        return 0;
+    } else  {
+        return iResult;
+       // printf("recv failed: %d\n", WSAGetLastError());
+    }
 }
 
-extern int sock_send_tcp(int fd, char * addr, struct socketStruct,int flags ) {
+
+extern int sock_send_tcp(int fd,char *buf, int buflen, int flags ) {
+
+    int iResult;
+
+    /*if(IN6_IS_ADDR_LINKLOCAL((struct in6_addr*)packaddr)
+       ||IN6_IS_ADDR_SITELOCAL((struct in6_addr*)packaddr))
+    strcat(strcat(addrStr,"%"),ifaceStr);*/
+
+    if (!buflen){
+        buflen=(int)strlen(buf);
+    }
+    if (iResult=send(fd,buf,buflen,0))
+    {
+        freeaddrinfo(remote);
+        if (iResult < 0) displayError(WSAGetLastError());
+        return 0;
+    }
+
+    return iResult;
+}
+
+extern int terminate_tcp_connection(int fd,int how) {
+
+    //SD_RECEIVE 0
+    //SD_SEND    1
+    //SD_BOTH    2
+    int howInt;
+    if(how==0) {
+        howInt=SD_RECEIVE;
+    }
+    if(how==1) {
+        howInt=SD_SEND;
+    }
+    if(how==2) {
+        howInt=SD_BOTH;
+    }
+    iResult = shutdown(ConnectSocket,howInt);
+    if (iResult == SOCKET_ERROR) {
+        wprintf(L"shutdown failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        return 1;
+    }
+    return iResult;
 
 }
 
-
-
-
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 int sock_del(int fd)
 {
 	return closesocket(fd);
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 int sock_send(int fd, char * addr, char * buf, int buflen, int port,int iface)
 {	
     struct addrinfo inforemote,*remote;
 	char				addrStr[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")+5];
-<<<<<<< HEAD
+
     char				portStr[10];
-=======
+
 	char				portStr[10];
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	int i;
 	char				packaddr[16];
 	char				ifaceStr[10];
@@ -466,28 +513,17 @@ int sock_send(int fd, char * addr, char * buf, int buflen, int port,int iface)
        ||IN6_IS_ADDR_SITELOCAL((struct in6_addr*)packaddr))
 	strcat(strcat(addrStr,"%"),ifaceStr);
 
-#if 0
-/*	if (IN6_IS_ADDR_MULTICAST((IN6_ADDR*)addr))
-	{
-		ipmreq.ipv6mr_interface=4;
-		memcpy(&ipmreq.ipv6mr_multiaddr,addr,16);
-		if(setsockopt(fd,IPPROTO_IPV6,IPV6_ADD_MEMBERSHIP,(char*)&ipmreq,sizeof(ipmreq)))
-			return -1; //WSAGetLastError();
-		//int hops=8;
-		//if(setsockopt(fd,IPPROTO_IPV6,IPV6_MULTICAST_HOPS,(char*)&hops,sizeof(hops)))
-		//	return -1; //WSAGetLastError();
-	}*/
-#endif
 	
 	memset(&inforemote, 0, sizeof(inforemote));
+
 	inforemote.ai_flags=AI_NUMERICHOST;
 	inforemote.ai_family=PF_INET6;
-	inforemote.ai_socktype=SOCK_DGRAM;
+    inforemote.ai_socktype=SOCK_STREAM;
 	inforemote.ai_protocol=IPPROTO_IPV6;
 	//inet_ntop6(addr,addrStr);
 	if(getaddrinfo(addrStr,portStr,&inforemote,&remote))
 		return 0;
-	if (i=sendto(fd,buf,buflen,0,remote->ai_addr,remote->ai_addrlen))
+    if (i=send(fd,buf,buflen,0,remote->ai_addr,remote->ai_addrlen))
 	{
 		freeaddrinfo(remote);
     	if (i<0) displayError(WSAGetLastError());
@@ -509,18 +545,17 @@ int sock_recv(int fd, char * myPlainAddr, char * peerPlainAddr, char * buf, int 
 	if(!(readBytes=recvfrom(fd,buf,buflen,0,(SOCKADDR*)&info,&infolen))) {
 		return -1;
 	} else {
-#ifdef MINGWBUILD
+    #ifdef MINGWBUILD
     	        inet_ntop6((const char *)info.sin6_addr._S6_un._S6_u8,peerPlainAddr);    	        
-#else
+    #else
     	        inet_ntop6(info.sin6_addr.u.Byte,peerPlainAddr);
-#endif    	        
+    #endif
 		return	readBytes;
 	}
-<<<<<<< HEAD
 }
-=======
-} 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
+
+
 
 extern int dns_add(const char* ifname, int ifindex, const char* addrPlain) {
   // I think Windows NT/2000 does not support DNS over IPv6...

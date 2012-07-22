@@ -10,34 +10,29 @@
 
 #include <stdlib.h>
 #include <cmath>
-<<<<<<< HEAD
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 #include "Portable.h"
 #include "DHCPConst.h"
 #include "SmartPtr.h"
 #include "Container.h"
-<<<<<<< HEAD
 
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 #include "Msg.h"
 #include "Opt.h"
 #include "Logger.h"
 #include "hmac.h"
 
-<<<<<<< HEAD
+
 TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize)
     :pkt(0)
-=======
+
 class TNotifyScriptParams;
 
 TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize)
     :pkt(0), NotifyScripts(NULL)
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 {
     setAttribs(iface, addr, 0, 0);
     if (bufSize<4)
@@ -49,29 +44,54 @@ TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, char* &buf, int &bufSize)
 }
 
 TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, int msgType)
-<<<<<<< HEAD
+
     :pkt(0)
-=======
+
     :pkt(0), NotifyScripts(NULL)
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 {
     long tmp = rand() % (255*255*255);
     setAttribs(iface,addr,msgType,tmp);
 }
 
 TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, int msgType,  long transID)
-<<<<<<< HEAD
-=======
+
     :NotifyScripts(NULL)
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 {
     setAttribs(iface,addr,msgType,transID);
+}
+
+TMsg::TMsg(int iface, SPtr<TIPv6Addr> addr, int msgSize, int msgType, long transID)
+{
+
+    setAttribsForTcpMsg(iface,addr,msgSize,msgType,transID);
 }
 
 void TMsg::setAttribs(int iface, SPtr<TIPv6Addr> addr, int msgType, long transID)
 {
     PeerAddr=addr;
 
+    this->Iface=iface;
+    TransID=transID;
+    IsDone=false;
+    MsgType=msgType;
+    this->pkt=NULL;
+    DigestType = DIGEST_NONE; /* by default digest is none */
+    AuthInfoPtr = NULL;
+    AuthInfoKey = NULL;
+    KeyGenNonce = NULL;
+    KeyGenNonceLen = 0;
+    AAASPI = 0;
+    SPI = 0;
+    ReplayDetection = 0;
+}
+
+void TMsg::setAttribsForTcpMsg(int iface, SPtr<TIPv6Addr> addr, int msgSize, int msgType, long transID)
+{
+    PeerAddr=addr;
+
+    messageSize=msgSize;
     this->Iface=iface;
     TransID=transID;
     IsDone=false;
@@ -208,12 +228,11 @@ SPtr<TOpt> TMsg::getOption() {
 }
 
 TMsg::~TMsg() {
-<<<<<<< HEAD
-=======
+
     if (NotifyScripts) {
         delete NotifyScripts;
     }
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 }
 
 SPtr<TIPv6Addr> TMsg::getAddr() {

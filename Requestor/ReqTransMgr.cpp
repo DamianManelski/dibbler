@@ -10,10 +10,9 @@
 
 #include <stdio.h>
 #include <sstream>
-<<<<<<< HEAD
-=======
+
 #include "SocketIPv6.h"
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 #include "ReqTransMgr.h"
 #include "ReqMsg.h"
 #include "OptAddr.h"
@@ -21,10 +20,10 @@
 #include "OptGeneric.h"
 #include "Logger.h"
 #include "ReqOpt.h"
-<<<<<<< HEAD
-=======
+
+
 #include "Portable.h"
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 ReqTransMgr::ReqTransMgr(TIfaceMgr * ifaceMgr)
 {
@@ -63,10 +62,7 @@ bool ReqTransMgr::BindSockets()
 	    loopback = ptrIface;
 	    break;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     if (!loopback) {
 	   Log(Crit) << "Loopback interface not found!" << LogEnd;
 	   return false;
@@ -115,7 +111,7 @@ bool ReqTransMgr::BindSockets()
     }
     Log(Debug) << "Socket " << Socket->getFD() << " created on the " << Iface->getFullName() << " interface." << LogEnd;
 
-<<<<<<< HEAD
+
     return true;
 }
 
@@ -196,9 +192,9 @@ bool ReqTransMgr::BindTcpSockets()
     Log(Debug) << "Socket " << Socket->getFD() << " created on the " << Iface->getFullName() << " interface." << LogEnd;
     return true;
 
-=======
+
     return true;    
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 }
 
 bool ReqTransMgr::SendMsg()
@@ -234,8 +230,8 @@ bool ReqTransMgr::SendMsg()
         bufLen += optAddr->getSize();
         free(optAddr);
         
-<<<<<<< HEAD
-    } else if (CfgMgr->duid) {
+
+    } else {
         Log(Debug) << "Creating DUID-based query. Asking for " << CfgMgr->duid << " DUID." << LogEnd;
         // DUID based query
         buf[0] = QUERY_BY_CLIENTID;
@@ -249,20 +245,6 @@ bool ReqTransMgr::SendMsg()
         bufLen += optDuid->getSize();
         free(optDuid);
     
-    } else {
-        Log(Debug) << "Creating LINK-ADDRESS-based query. Asking for " << CfgMgr->bulk << " address." << LogEnd;
-        // Link-address based query
-        buf[0] = QUERY_BY_LINKADDRESS;
-        // buf[1..16] - link address, leave as ::
-        memset(buf+1, 16, 0);
-        bufLen = 17;
-
-        // add new IAADDR option
-        SPtr<TIPv6Addr> a = new TIPv6Addr(CfgMgr->bulk, true);
-        TReqOptAddr * optAddr = new TReqOptAddr(OPTION_IAADDR, a, msg);
-        optAddr->storeSelf(buf+bufLen);
-        bufLen += optAddr->getSize();
-        free(optAddr);
     }
 
     SPtr<TDUID> clientDuid = new TDUID("00:01:00:01:0e:ec:13:db:00:02:02:02:02:02");
@@ -290,96 +272,98 @@ bool ReqTransMgr::SendMsg()
 
 bool ReqTransMgr::SendTcpMsg()
 {
+
+    // bulk leasequery assumed three types of queries:
+    //by Relay Id
+    //Link Address
+    //by Remote Id
+
     SPtr<TIPv6Addr> dstAddr;
     if (!CfgMgr->dstaddr)
     dstAddr = new TIPv6Addr("ff02::1:2", true);
     else
     dstAddr = new TIPv6Addr(CfgMgr->dstaddr, true);
 
+
     Log(Debug) << "Transmitting data on the " << Iface->getFullName() << " interface to "
-           << dstAddr->getPlain() << " address." << LogEnd;
-    TReqMsg * msg = new TReqMsg(Iface->getID(), dstAddr, LEASEQUERY_MSG);
+           << dstAddr->getPlain() << " address by tcp protocol." << LogEnd;
+
+
+
+    TReqMsg * msg = new TReqMsg(Iface->getID(), dstAddr, msgSize, LEASEQUERY_MSG);
 
     char buf[1024];
     int bufLen;
     memset(buf, 1024, 0xff);
 
-    if (CfgMgr->addr) {
-        Log(Debug) << "Creating ADDRESS-based query. Asking for " << CfgMgr->addr << " address." << LogEnd;
-        // Address based query
-        buf[0] = QUERY_BY_ADDRESS;
-        // buf[1..16] - link address, leave as ::
-        memset(buf+1, 0, 16);
-        bufLen = 17;
 
-        // add new IAADDR option
-        SPtr<TIPv6Addr> a = new TIPv6Addr(CfgMgr->addr, true);
-        TReqOptAddr * optAddr = new TReqOptAddr(OPTION_IAADDR, a, msg);
-        optAddr->storeSelf(buf+bufLen);
-        bufLen += optAddr->getSize();
-        free(optAddr);
-
-    } else if (CfgMgr->duid) {
-=======
-    } else {
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
-        Log(Debug) << "Creating DUID-based query. Asking for " << CfgMgr->duid << " DUID." << LogEnd;
-        // DUID based query
-        buf[0] = QUERY_BY_CLIENTID;
-        // buf[1..16] - link address, leave as ::
-        memset(buf+1, 0, 16);
-        bufLen = 17;
-
-        SPtr<TDUID> duid = new TDUID(CfgMgr->duid);
-        TReqOptDUID * optDuid = new TReqOptDUID(OPTION_CLIENTID, duid, msg);
-        optDuid->storeSelf(buf+bufLen);
-        bufLen += optDuid->getSize();
-<<<<<<< HEAD
-        free(optDuid);
-
-    } else {
-        Log(Debug) << "Creating LINK-ADDRESS-based query. Asking for " << CfgMgr->bulk << " address." << LogEnd;
-        // Link-address based query
-        buf[0] = QUERY_BY_LINKADDRESS;
+    if (CfgMgr->relayId) {
+        Log(Debug) << "Creating RelayId-based query. Asking for " << CfgMgr->relayId << " RelayId." << LogEnd;
+        // RelayId-based query
+        buf[0] = QUERY_BY_RELAY_ID;
         // buf[1..16] - link address, leave as ::
         memset(buf+1, 16, 0);
         bufLen = 17;
 
-        // add new IAADDR option
-        SPtr<TIPv6Addr> a = new TIPv6Addr(CfgMgr->bulk, true);
-        TReqOptAddr * optAddr = new TReqOptAddr(OPTION_IAADDR, a, msg);
-        optAddr->storeSelf(buf+bufLen);
-        bufLen += optAddr->getSize();
-        free(optAddr);
-=======
+        // add new OPTION_RELAY_ID option
+        SPtr<TDUID> duid = new TDUID(CfgMgr->duid);
+        TReqOptRelayId * optRelayId = new TReqOptRelayId(OPTION_RELAY_ID, bufLen, duid, msg);//bufLen=optLen ?
+        optRelayId->storeSelf(buf+bufLen);
+        bufLen += optRelayId->getSize();
+        free(optRelayId);
 
-        free(optDuid);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+    } else {
+        Log(Debug) << "Cannot creating RelayId-based query for " << CfgMgr->relayId << " RelayId." << "It's not present in the server" <<LogEnd;
     }
 
-    SPtr<TDUID> clientDuid = new TDUID("00:01:00:01:0e:ec:13:db:00:02:02:02:02:02");
-    SPtr<TOpt> opt = new TReqOptDUID(OPTION_CLIENTID, clientDuid, msg);
-    msg->addOption(opt);
+    if(CfgMgr->remoteId) {
 
-    opt = new TReqOptGeneric(OPTION_LQ_QUERY, buf, bufLen, msg);
-    msg->addOption(opt);
-<<<<<<< HEAD
+        Log(Debug) << "Creating RemoteId-based query. Asking for " << CfgMgr->remoteId << " RemoteId." << LogEnd;
+        // RelayId-based query
+        buf[0] = QUERY_BY_REMOTE_ID;
+        // buf[1..16] - link address, leave as ::
+        memset(buf+1, 16, 0);
+        bufLen = 17;
 
-=======
-    
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
-    char msgbuf[1024];
-    int  msgbufLen;
-    memset(msgbuf, 0xff, 1024);
+        //skad wziac enterpise
+        //add new remoteId option
+        TRelOptRemoteID * optRemoteId = new TRelOptRemoteID(enterprise,buf, bufLen, msg);
 
-    msgbufLen = msg->storeSelf(msgbuf);
+        optRemoteId->storeSelf(buf+bufLen);
+        bufLen += optAddr->getSize();
+        free(optRemoteId);
 
-    Log(Debug) << msg->getSize() << "-byte long LQ_QUERY message prepared." << LogEnd;
+    } else {
+        Log(Debug) << "Cannot creating RemoteId-based query for " << CfgMgr->remoteId << " RemoteId." << "It's not present in the server" <<LogEnd;
+    }
+
+    if(CfgMgr->linkAddr) {
+
+        Log(Debug) << "Creating LINK-ADDRESS-based query. Asking for " << CfgMgr->linkAddr << " address." << LogEnd;
+        // Link-address based query
+        buf[0] = QUERY_BY_LINK_ADDRESS;
+        // buf[1..16] - link address, leave as ::
+        memset(buf+1, 16, 0);
+        bufLen = 17;
+
+        // add new  option
+        //TReqOptLinkAddr(int optType, char * data, int dataLen, TMsg* parent);
+        TReqOptLinkAddr * optLinkAddr = new TReqOptLinkAddr(OPTION_);
+        optLinkAddr->storeSelf(buf+bufLen);
+        bufLen += optLinkAddr->getSize();
+        free(optLinkAddr);
+
+    } else {
+        Log(Debug) << "Cannot creating LinkAddr-based query for " << CfgMgr->remoteId << " link address." << "It's not present in the server" <<LogEnd;
+    }
+
+
 
     if (this->Socket->send(msgbuf, msgbufLen, dstAddr, DHCPSERVER_PORT)<0) {
         Log(Error) << "Message transmission failed." << LogEnd;
         return false;
     }
+
     Log(Info) << "LQ_QUERY message sent." << LogEnd;
     return true;
 }
@@ -437,17 +421,17 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 		       << " bytes left to parse. Bytes ignored." << LogEnd;
 	    return false;
 	}
-<<<<<<< HEAD
+
 	unsigned short code = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
 	unsigned short length = ntohs( *((unsigned short*) (buf+pos)));
 	pos+=2;
-=======
+
 	unsigned short code = readUint16(buf+pos);
 	pos += sizeof(uint16_t);
 	unsigned short length = readUint16(buf+pos);
 	pos += sizeof(uint16_t);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	if (pos+length>bufLen) {
 	    Log(Error) << linePrefix << "Truncated option (type=" << code << ", len=" << length 
 		       << " received in message << " << msgType << ". Option ignored." << LogEnd;
@@ -505,11 +489,11 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 	case OPTION_CLT_TIME:
 	{
             name = "LQ Client Last Transmission Time";
-<<<<<<< HEAD
+
 	    unsigned int t = ntohl( *((unsigned int*)(buf+pos)));
-=======
+
 	    unsigned int t = readUint32(buf+pos);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	    ostringstream out;
 	    out << t << " second(s)";
 	    o = out.str();
@@ -524,13 +508,13 @@ bool ReqTransMgr::ParseOpts(int msgType, int recurseLevel, char * buf, int bufLe
 	case OPTION_IAADDR:
 	{
 	    TIPv6Addr * addr = new TIPv6Addr(buf+pos, false);
-<<<<<<< HEAD
+
 	    unsigned int pref  = ntohl(*((long*)(buf+pos+16)));
 	    unsigned int valid = ntohl(*((long*)(buf+pos+20)));
-=======
+
 	    unsigned int pref  = readUint32(buf+pos+16);
 	    unsigned int valid = readUint32(buf+pos+20);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	    name = "IAADDR";
 	    ostringstream out;
 	    out << "addr=" << addr->getPlain() << ", pref=" << pref << ", valid=" << valid;
@@ -564,14 +548,18 @@ string ReqTransMgr::BinToString(char * buf, int bufLen)
     return o.str();
 }
 
-<<<<<<< HEAD
+
 bool ReqTransMgr::RetryConnection()
 {
-    if (ReqTransMgr::SendMsg()==false) {
-        ReqTransMgr::SendMsg();
+    if (ReqTransMgr::SendTcpMsg()==false) {
+        ReqTransMgr::SendTcpMsg()
         Log(Debug) << "Retrying TCP connection with address:" << CfgMgr->addr << " address." << LogEnd;
     }
 }
 
-=======
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+void ReqTransMgr::TerminateTcpConn()
+{
+
+
+}
+

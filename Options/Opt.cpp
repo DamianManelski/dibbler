@@ -8,15 +8,14 @@
  *
  */
 
-<<<<<<< HEAD
+
 #include "Opt.h"
-=======
 #include "Portable.h"
 #include "Opt.h"
 #include "OptGeneric.h"
 #include "OptRtPrefix.h"
 #include "Logger.h"
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 int TOpt::getOptType() {
     return OptType;
@@ -41,15 +40,14 @@ int TOpt::getSubOptSize() {
     return size;
 }
 
-<<<<<<< HEAD
-=======
+
 char* TOpt::storeHeader(char* buf) {
     buf = writeUint16(buf, OptType);
     buf = writeUint16(buf,getSize() - 4);
     return buf;
 }
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 char* TOpt::storeSubOpt( char* buf){
     SPtr<TOpt> ptr;
     SubOptions.first();
@@ -112,8 +110,6 @@ void TOpt::delOption() {
 std::string TOpt::getPlain() {
     return "[generic]";
 }
-<<<<<<< HEAD
-=======
 
 
 /// Parses options or suboptions, creates appropriate objects and store them in options container
@@ -170,4 +166,3 @@ bool TOpt::parseOptions(TContainer< SPtr<TOpt> >& options,
 
     return true;
 }
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d

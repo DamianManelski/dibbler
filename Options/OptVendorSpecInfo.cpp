@@ -19,13 +19,11 @@
 #include "DHCPConst.h"
 #include "Logger.h"
 
-<<<<<<< HEAD
-=======
 #if defined(LINUX) || defined(BSD)
 #include <arpa/inet.h>
 #endif
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* parent)
     :TOpt(type, parent)
 {
@@ -37,7 +35,6 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
 	return;
     }
 
-<<<<<<< HEAD
     this->Vendor = ntohl(*(int*)buf); // enterprise number
 
     buf += 4;
@@ -48,7 +45,7 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
         optionLen  =  ntohs(*(int*)(buf+2));
         buf += 4;
         n   -= 4;
-=======
+
     this->Vendor = readUint32(buf); // enterprise number
     buf += sizeof(uint32_t);
     n   -= sizeof(uint32_t);
@@ -58,7 +55,7 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
         buf += sizeof(uint16_t); n -= sizeof(uint16_t);
         optionLen  =  readUint16(buf);
         buf += sizeof(uint16_t); n -= sizeof(uint16_t);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
         if (optionLen>n) {
             Log(Warning) << "Malformed vendor-spec info option. Suboption " << optionCode
                          << " truncated." << LogEnd;
@@ -80,9 +77,7 @@ TOptVendorSpecInfo::TOptVendorSpecInfo(int type, char * buf,  int n, TMsg* paren
     Valid = true;
 }
 
-TOptVendorSpecInfo::TOptVendorSpecInfo(int enterprise, int optionCode, 
-                                       char *data, int dataLen, TMsg* parent)
-    :TOpt(OPTION_VENDOR_OPTS, parent)
+TOptVendorSpecInfo::TOptVendorSpecInfo(int enterprise, int optionCode, char *data, int dataLen, TMsg* parent):TOpt(OPTION_VENDOR_OPTS, parent)
 {
     this->Vendor = enterprise;
     if (optionCode) 
