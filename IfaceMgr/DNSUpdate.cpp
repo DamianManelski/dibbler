@@ -17,10 +17,9 @@
 #include "Portable.h"
 #include "Logger.h"
 #include <stdio.h>
-<<<<<<< HEAD
-=======
+
 #include "sha256.h"
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 
 DNSUpdate::DNSUpdate(string dns_address, string zonename, string hostname,
 		     string hostip, DnsUpdateMode updateMode,
@@ -28,9 +27,9 @@ DNSUpdate::DNSUpdate(string dns_address, string zonename, string hostname,
     :_hostname(NULL) { 
     message= NULL;
     memset(&server, 0, sizeof(server));
-<<<<<<< HEAD
+
     server.ss_family = AF_INET6;
-=======
+
 
 #ifndef WIN32	
 	// LINUX, BSD
@@ -39,29 +38,29 @@ DNSUpdate::DNSUpdate(string dns_address, string zonename, string hostname,
 	// WINDOWS
 	server.sa_family = AF_INET6;
 #endif
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     
     if (updateMode==DNSUPDATE_AAAA || updateMode==DNSUPDATE_AAAA_CLEANUP) {
 	splitHostDomain(hostname);
     } else {
-<<<<<<< HEAD
+
 	_hostname=new char[hostname.length()+1];
 	strcpy(_hostname,hostname.c_str());
-=======
+
         int len = hostname.length()+1;
         _hostname=new char[len];
         strncpy(_hostname,hostname.c_str(), len-1);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	zoneroot = new domainname(zonename.c_str());
     }
     
     txt_to_addr(&server,dns_address.c_str());
-<<<<<<< HEAD
+
     this->hostip = new char[hostip.length()+1];
     strcpy(this->hostip,hostip.c_str());
     this->ttl=new char[strlen(DNSUPDATE_DEFAULT_TTL)+1];
     strcpy(this->ttl,DNSUPDATE_DEFAULT_TTL);
-=======
+
     int len = hostip.length()+1;
     this->hostip = new char[len];
     strncpy(this->hostip,hostip.c_str(), len-1);
@@ -71,7 +70,7 @@ DNSUpdate::DNSUpdate(string dns_address, string zonename, string hostname,
     this->ttl=new char[len];
     strncpy(this->ttl,DNSUPDATE_DEFAULT_TTL, len-1);
     ttl[len-1]=0;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     this->updateMode = updateMode;
     _proto = proto;
 }
@@ -102,14 +101,14 @@ void DNSUpdate::splitHostDomain(string fqdnName) {
     if (dotpos == string::npos) {
 	Log(Warning) << "Name provided for DNS update is not a FQDN. [" << fqdnName
 		     << "]." << LogEnd;
-<<<<<<< HEAD
+
 	_hostname = new char[fqdnName.length()+1];
 	strcpy(_hostname, fqdnName.c_str());
-=======
+
 	int len = fqdnName.length()+1;
 	_hostname = new char[len];
 	strncpy(_hostname, fqdnName.c_str(), len -1);
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     else {
 	string hostname = fqdnName.substr(0, dotpos);
@@ -197,8 +196,7 @@ void DNSUpdate::addinMsg_newAAAA(){
     Log(Debug) << "DDNS: AAAA record created:" << rr.NAME.tostring() << " -> " << hostip << LogEnd;
 }
 
-<<<<<<< HEAD
-=======
+
 void DNSUpdate::addDHCID(const char* duid, int duidlen) {
     DnsRR rr;
     rr.NAME = domainname(_hostname, *zoneroot);
@@ -230,7 +228,7 @@ void DNSUpdate::addTSIG(const char* key, int keylen) {
     // message->additional.push_back(rr);
 }
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 /** 
  * delete a single rr from rrset. If no such RRs exist, then this Update RR will be
  * silently ignored by the primary master.
@@ -269,11 +267,11 @@ void DNSUpdate::deletePTRRecordFromRRSet(){
   rr.RDATA = (unsigned char*)memdup(data.c_str(), rr.RDLENGTH);
   message->authority.push_back(rr);
 
-<<<<<<< HEAD
+
   Log(Debug) << "DDNR: PTR record created: " << result << " -> " << tmp << LogEnd;
-=======
+
   Log(Debug) << "DDNS: PTR record created: " << result << " -> " << tmp << LogEnd;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 }
 		
 /** 
@@ -511,11 +509,11 @@ void DNSUpdate::showResult(int result)
 	Log(Warning) << "DDNS: Unable to establish connection to the DNS server." << LogEnd;
 	break;
     case DNSUPDATE_SRVNOTAUTH:
-<<<<<<< HEAD
+
 	Log(Warning) << "DDNS: DNS Update failed: server is not not authoritative." << LogEnd;
-=======
+
 	Log(Warning) << "DDNS: DNS Update failed: server returned NOTAUTH." << LogEnd;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 	break;
     case DNSUPDATE_SKIP:
 	Log(Notice) << "DDNS: DNS Update was skipped." << LogEnd;

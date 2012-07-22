@@ -387,7 +387,7 @@ bool ReqTransMgr::WaitForRsp()
         Log(Error) << "Response not received. Timeout or socket error." << LogEnd;
         return false;
     }
-    
+
     return true;
 }
 

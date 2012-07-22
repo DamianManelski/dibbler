@@ -21,12 +21,12 @@
 #include "Iface.h"
 #include "SocketIPv6.h"
 #include "Logger.h"
-<<<<<<< HEAD
+
 
 /*
  * creates list of interfaces
  */
-=======
+
 #include "Msg.h"
 #include "OptIAAddress.h"
 #include "OptIAPrefix.h"
@@ -36,7 +36,7 @@
 ///
 /// @param xmlFile xml file, where interface info will be stored
 /// @param getIfaces  specifies if interfaces should be detected
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 TIfaceMgr::TIfaceMgr(string xmlFile, bool getIfaces)
 {
     this->XmlFile = xmlFile;
@@ -45,16 +45,14 @@ TIfaceMgr::TIfaceMgr(string xmlFile, bool getIfaces)
     struct iface  * ifaceList;
 
     if (!getIfaces)
-<<<<<<< HEAD
+
 	return;
-=======
-        return;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+    return;
+
 
     // get interface list
     ifaceList = if_list_get(); // external (C coded) function
     ptr = ifaceList;
-<<<<<<< HEAD
     
     if  (!ifaceList) {
 	IsDone = true;
@@ -78,7 +76,7 @@ TIfaceMgr::TIfaceMgr(string xmlFile, bool getIfaces)
 						       ptr->globaladdr,
 						       ptr->globaladdrcount,
 						       ptr->hardwareType));
-=======
+
 
     if  (!ifaceList) {
         IsDone = true;
@@ -102,7 +100,7 @@ TIfaceMgr::TIfaceMgr(string xmlFile, bool getIfaces)
                                                        ptr->globaladdr,
                                                        ptr->globaladdrcount,
                                                        ptr->hardwareType));
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
         this->IfaceLst.append(iface);
         ptr = ptr->next;
     }
@@ -139,13 +137,13 @@ SPtr<TIfaceIface> TIfaceMgr::getIfaceByName(string name) {
     SPtr<TIfaceIface> ptr;
     IfaceLst.first();
     while ( ptr = IfaceLst.get() ) {
-<<<<<<< HEAD
+
 	if ( !strcmp(name.c_str(),ptr->getName()) )
 	    return ptr;
-=======
+
         if ( !strcmp(name.c_str(),ptr->getName()) )
             return ptr;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     return 0; // NULL
 }
@@ -155,20 +153,19 @@ SPtr<TIfaceIface> TIfaceMgr::getIfaceByName(string name) {
  * @param id - interface id
 <<<<<<< HEAD
  */ 
-=======
- */
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
+
 SPtr<TIfaceIface> TIfaceMgr::getIfaceByID(int id) {
     SPtr<TIfaceIface> ptr;
     IfaceLst.first();
     while ( ptr = IfaceLst.get() ) {
-<<<<<<< HEAD
+
 	if ( id == ptr->getID() )
 	    return ptr;
-=======
+
         if ( id == ptr->getID() )
             return ptr;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     return 0; //NULL
 }
@@ -180,19 +177,19 @@ SPtr<TIfaceIface> TIfaceMgr::getIfaceBySocket(int fd) {
     SPtr<TIfaceIface> ptr;
     IfaceLst.first();
     while ( ptr = IfaceLst.get() ) {
-<<<<<<< HEAD
+
 	if ( ptr->getSocketByFD(fd) )
 	    return ptr;
-=======
+
         if ( ptr->getSocketByFD(fd) )
             return ptr;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     return 0;
 }
 
 /*
-<<<<<<< HEAD
+
  * tries to read data from any socket on all interfaces 
  * returns after time seconds.
  * @param time - listens for time seconds
@@ -209,7 +206,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
 	time /=2;
 
 #ifdef MACOS
-=======
+
  * tries to read data from any socket on all interfaces
  * returns after time seconds.
  * @param time listens for time seconds
@@ -227,16 +224,14 @@ int TIfaceMgr::select(unsigned long time, char *buf,
         time /=2;
 
 #ifdef BSD
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     // For some reason, Darwin kernel doesn't like too large timeout values
     if (time > DHCPV6_INFINITY/4)
         time = 3600*24*7; // a week is enough
 #endif
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+    
+
     czas.tv_sec=time;
     czas.tv_usec=0;
 
@@ -254,11 +249,11 @@ int TIfaceMgr::select(unsigned long time, char *buf,
 
     if (result==0) { // timeout, nothing received
         bufsize = 0;
-<<<<<<< HEAD
+
         return 0; 
-=======
+
         return 0;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     if (result<0) {
         char buf[512];
@@ -272,7 +267,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
     bool found = 0;
     IfaceLst.first();
     while ( (!found) && (iface = IfaceLst.get()) ) {
-<<<<<<< HEAD
+
 	iface->firstSocket();
 	while ( sock = iface->getSocket() ) {
 	    if (FD_ISSET(sock->getFD(),&fds)) {
@@ -280,7 +275,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
 		break;
 	    }	
 	}
-=======
+
         iface->firstSocket();
         while ( sock = iface->getSocket() ) {
             if (FD_ISSET(sock->getFD(),&fds)) {
@@ -288,18 +283,14 @@ int TIfaceMgr::select(unsigned long time, char *buf,
                 break;
             }
         }
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
 
     if (!found) {
         Log(Error) << "Seems like internal error. Unable to find any socket with incoming data." << LogEnd;
         return 0;
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     char myPlainAddr[48];   // my plain address
     char peerPlainAddr[48]; // peer plain address
 
@@ -314,7 +305,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
     if (result==-1) {
         Log(Error) << "Socket recv() failure detected." << LogEnd;
         bufsize = 0;
-<<<<<<< HEAD
+
 	return -1;
     }
 
@@ -331,7 +322,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
 	    bufsize = 0;
 	    return 0;
     }  
-=======
+
         return -1;
     }
 
@@ -348,7 +339,7 @@ int TIfaceMgr::select(unsigned long time, char *buf,
             bufsize = 0;
             return 0;
     }
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
 #endif
 
     bufsize = result;
@@ -359,11 +350,11 @@ int TIfaceMgr::select(unsigned long time, char *buf,
  * returns interface count
  */
 int TIfaceMgr::countIface() {
-<<<<<<< HEAD
+
 	return IfaceLst.count();
-=======
-        return IfaceLst.count();
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
+     return IfaceLst.count();
+
 }
 
 /*
@@ -390,7 +381,7 @@ string TIfaceMgr::printMac(char * mac, int macLen) {
     unsigned char x;
 
     for (i=0; i<macLen; i++) {
-<<<<<<< HEAD
+
 	if (i)
 	    tmp << ":";
 	tmp << hex;
@@ -398,7 +389,7 @@ string TIfaceMgr::printMac(char * mac, int macLen) {
 	tmp.width(2);
 	x = (unsigned char) mac[i];
 	tmp << (unsigned int)x;
-=======
+
         if (i)
             tmp << ":";
         tmp << hex;
@@ -406,13 +397,12 @@ string TIfaceMgr::printMac(char * mac, int macLen) {
         tmp.width(2);
         x = (unsigned char) mac[i];
         tmp << (unsigned int)x;
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
+
     }
     return tmp.str();
 }
 
-<<<<<<< HEAD
-=======
+
 void TIfaceMgr::optionToEnv(TNotifyScriptParams& params, SPtr<TOpt> opt, std::string txtPrefix )
 {
     switch (opt->getOptType()) {
@@ -582,8 +572,6 @@ void TIfaceMgr::notifyScripts(std::string scriptName, SPtr<TMsg> question, SPtr<
 }
 
 
-
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
 // --------------------------------------------------------------------
 // --- operators ------------------------------------------------------
 // --------------------------------------------------------------------
@@ -598,11 +586,7 @@ ostream & operator <<(ostream & strum, TIfaceMgr &x)
     while ( ptr=x.IfaceLst.get() ) {
         strum << *ptr;
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> c851e389da43c1649eff5a1b7971999200e5d44d
     strum << "</IfaceMgr>" << endl;
     return strum;
 }
